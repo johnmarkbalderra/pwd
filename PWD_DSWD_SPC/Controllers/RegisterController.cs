@@ -155,7 +155,7 @@ namespace PWD_DSWD_SPC.Controllers
                 <p><strong>Submission Details:</strong></p>
                 <p>The above requirements must be submitted at the office of DSWD, Municipality of San Pablo City, from 8:00 AM to 5:00 PM.</p>
 
-                <p>Thank you for your application. Should you have any questions, feel free to reach out to our office. We look forward to assisting you.</p>
+                <p>Thank you for your application. Should you have any questions?, feel free to reach out to our office. We look forward to assisting you.</p>
 
                 <p>Best Regards,<br/>
                 DSWD San Pablo City</p>
