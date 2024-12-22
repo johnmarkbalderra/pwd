@@ -63,23 +63,23 @@
 
                             <script>
                                 document.querySelectorAll('.restore-button').forEach(button => {
-                                    button.addEventListener('click', function () {
-                                        const formId = restore-form-${this.dataset.id};
-                                        Swal.fire({
-                                            title: 'Are you sure?',
-                                            text: "You are about to restore this account.",
-                                            icon: 'warning',
-                                            showCancelButton: true,
-                                            confirmButtonColor: '#3085d6',
-                                            cancelButtonColor: '#d33',
-                                            confirmButtonText: 'Yes, restore it!'
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                document.getElementById(formId).submit();
-                                            }
-                                        });
+                                button.addEventListener('click', function () {
+                                    const formId = `restore-form-${this.dataset.id}`; // Corrected line
+                                    Swal.fire({
+                                        title: 'Are you sure?',
+                                        text: "You are about to restore this account.",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Yes, restore it!'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            document.getElementById(formId).submit();
+                                        }
                                     });
                                 });
+                            });
 
                                 // Display SweetAlert for success or error messages
                                 document.addEventListener('DOMContentLoaded', function () {
