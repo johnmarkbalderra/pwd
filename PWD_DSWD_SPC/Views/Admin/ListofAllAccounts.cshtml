@@ -1,0 +1,611 @@
+﻿@model IEnumerable<PWD_DSWD_SPC.Models.Registered.Account>
+
+@{
+    ViewBag.Title = "List of All Accounts";
+    Layout = "~/Views/Admin/Admin_Layout.cshtml";
+}
+
+<h3 class="text-dark mb-0" style="padding-top: 20px;">List of All Accounts</h3>
+
+<div class="d-flex justify-content-end mb-3">
+    <input type="text" id="searchInput" class="form-control me-2" placeholder="Search..." style="width: 200px;" onkeyup="searchTable()">
+    <select id="sortSelect" class="form-control" style="width:200px;" onchange="handleSort()">
+        <option value="" disabled selected>Sort by</option>
+        <option value="4">Barangay</option>
+        <option value="1">Name</option>
+        <option value="7">Date Applied</option>
+        <option value="2">Sex</option>
+    </select>
+</div>
+
+<div class="table-responsive table-scrollable">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>Sex</th>
+                <th>Contact No.</th>
+                <th>Barangay</th>
+                <th>Type of Disability</th>
+                <th>ID Number</th>
+                <th>Date Applied</th>
+                <th>Valid Until</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                for (int i = 0; i < Model.Count(); i++)
+                {
+                    var account = Model.ElementAt(i);
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>@account.LastName, @account.FirstName @account.MiddleName</td>
+                        <td>@account.Gender</td>
+                        <td>@account.MobileNo</td>
+                        <td>@account.Barangay</td>
+                        <td>@account.TypeOfDisability</td>
+                        <td>@account.DisabilityNumber</td>
+                        <td>@account.CreatedAt.ToString("MM/dd/yyyy")</td>
+                        <td>@(account.ValidUntil.HasValue ? account.ValidUntil.Value.ToString("MM/dd/yyyy") : string.Empty)</td>
+                        <td>
+                            <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ViewDetails-@account.Id">
+                                <i class="fas fa-user-circle"></i>
+                            </button>
+
+                            <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#archiveModal" onclick="setAccountId('@account.Id')">
+                                <i class="fas fa-box-open"></i>
+                            </button>
+                            <button class="btn btn-outline-success btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#EditDetails-@account.Id">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="10">No accounts found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <script src="~/ADMIN-ASSET/js/table-feature.js"></script>
+
+    <!-- Archive Modal -->
+    <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#0B2271">
+                    <h5 class="modal-title" style="color:white">Archive Reason</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <select id="archiveReason" class="form-control text-center">
+                        <option value="" selected disabled>Select Reason</option>
+                        <option value="Deceased">Deceased</option>
+                        <option value="Change of Residency">Change of Residency</option>
+                    </select>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-danger mt-2" id="confirmArchive">Archive</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedAccountId;
+
+        function setAccountId(accountId) {
+            selectedAccountId = accountId;
+            console.log("Selected Account ID:", selectedAccountId); // Debugging line
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("confirmArchive").addEventListener("click", function () {
+                const archiveReason = document.getElementById("archiveReason").value;
+                if (!archiveReason) {
+                    alert("Please select a reason for archiving.");
+                    return;
+                }
+
+                fetch(`/Admin/Archive/${selectedAccountId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(archiveReason) // Send reason as plain string
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = '/Admin/ArchivedAccounts';
+                        } else {
+                            alert("Failed to archive the account.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert("An error occurred. Please try again.");
+                    });
+            });
+        });
+    </script>
+
+
+    <!-- View Details Modal -->
+    @foreach (var account in Model)
+    {
+        <div class="modal fade" role="dialog" tabindex="-1" id="ViewDetails-@account.Id">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#0B2271">
+                        <h4 class="modal-title" style="color:white">Full Details</h4>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        @* type of app *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Type of Applicant:</strong> @account.ApplicantType
+                        </div> <hr />
+                        @* person with dis no. *@
+                        @if (account.ApplicantType == "Renewal" || account.ApplicantType == "New Applicant")
+                        {
+                            <div class="form-group">
+                                <label for="pwdNumber">PWD Number:</label>
+                                <input type="text" class="form-control" style="border:none" value="@account.DisabilityNumber" readonly />
+                            </div>
+                        }
+
+                        @* date applied *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Date Applied:</strong> @account.CreatedAt
+                        </div> <hr />
+
+                        @* Personal Info *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong style="font-size:22px;">Personal Information</strong>
+                        </div>
+                        @* Fathers Name *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Father's Name:</strong> @account.FatherLastName,@account.FatherFirstName
+                        </div>
+                        @* Mothers Name *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Mother's Name:</strong> @account.MotherLastName,@account.MotherFirstName
+                        </div>
+                        @* Guardian Name *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Guardian's Name:</strong> @account.GuardianLastName,@account.GuardianFirstName
+                        </div><hr />
+
+                        @* Type of Dis *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Type of Disability:</strong> @account.TypeOfDisability
+                        </div><hr />
+
+                        @* Cause of Dis *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Cause of Disability:</strong> @account.CauseOfDisability
+                        </div><hr />
+
+                        @* Residence Add *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong style="font-size:22px;">Residence Address</strong>
+                        </div>
+                        @* House No & Street *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>House No. and Street:</strong> @account.HouseNoAndStreet
+                        </div>
+                        @* Barangay *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Barangay:</strong> @account.Barangay
+                        </div>
+                        @* Municipality *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Municipality:</strong> @account.Municipality
+                        </div>
+                        @* Region *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Region:</strong> @account.Region
+                        </div><hr />
+
+                        @* Contact Details *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong style="font-size:22px;">Contact Details</strong>
+                        </div>
+                        @* Landline No *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <strong>Landline No.:</strong> @account.LandlineNo
+                        </div>
+                        @* Mobile No *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Mobile No.:</strong> @account.MobileNo
+                        </div>
+                        @* Email Address *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Email Address:</strong> @account.EmailAddress
+                        </div><hr />
+
+                        @* Educ Attain *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Educational Attainment:</strong> @account.EducationalAttainment
+                        </div><hr />
+
+                        @* Status Employ *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Status of Employment:</strong> @account.StatusOfEmployment
+                        </div><hr />
+
+                        @* Category Employ *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Category of Employment:</strong> @account.CategoryOfEmployment
+                        </div><hr />
+
+                        @* Type of Employ *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Type of Employment:</strong> @account.TypeOfEmployment
+                        </div><hr />
+
+                        @* Occupation *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Occupation:</strong>
+                            @if (account.Occupation == "Other" && !string.IsNullOrWhiteSpace(account.OtherOccupation))
+                            {
+                                @account.OtherOccupation
+                            }
+                            else
+                            {
+                                @account.Occupation
+                            }
+                        </div><hr />
+
+                        @* Org Info *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong style="font-size:22px;">Organization Information:</strong>
+                        </div>
+                        @* Org Affiliated *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Organization Affiliated:</strong> @account.OrganizationAffiliated
+                        </div><hr />
+                        @* Contact Person *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Contact Person:</strong> @account.ContactPerson
+                        </div><hr />
+                        @* Office Add *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Office Address:</strong> @account.OfficeAddress
+                        </div><hr />
+                        @* Tel. Nos *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <strong>Tel. Nos:</strong> @account.OfficeTelNo
+                        </div><hr />
+
+                        @* Id Ref No. *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong style="font-size:22px;">ID Reference No.:</strong>
+                        </div>
+                        @* SSS No *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>SSS No.:</strong> @account.SSSNo
+                        </div>
+                        @* GSIS No *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>GSIS No.:</strong> @account.GSISNo
+                        </div>
+                        @* Pagibig No *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>PAG-IBIG No.:</strong> @account.PagIBIGNo
+                        </div>
+                        @* PSN No *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>PSN No.:</strong> @account.PSNNo
+                        </div>
+                        @* PhilHealth No *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>PhilHealth No.:</strong> @account.PhilHealthNo
+                        </div><hr />
+
+                        @* Accomplish By *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong style="font-size:22px;">Accomplish By:</strong>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Last Name:</strong> @account.AccomplishByLastName
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>First Name:</strong> @account.AccomplishByFirstName
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Middle Name:</strong> @account.AccomplishByMiddleName
+                        </div><hr />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+    @*  Edit Details *@
+    @foreach (var account in Model)
+    {
+        <!-- Edit Details Modal -->
+        <div class="modal fade" role="dialog" tabindex="-1" id="EditDetails-@account.Id">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#0B2271">
+                        <h4 class="modal-title" style="color:white">Edit Details</h4>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editAccountForm-@account.Id">
+
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="Id" value="@account.Id" />
+
+
+                            <div class="mb-3">
+                                <label for="disabilityNumber" class="form-label">PWD Number:</label>
+                                <input type="text" class="form-control" id="disabilityNumber" name="DisabilityNumber" value="@account.DisabilityNumber" />
+                            </div>
+
+                            @* Father's Name *@
+                            <div class="mb-3">
+                                <label for="fatherLastName" class="form-label">Father's Last Name:</label>
+                                <input type="text" class="form-control" id="fatherLastName" name="FatherLastName" value="@account.FatherLastName" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="fatherFirstName" class="form-label">Father's First Name:</label>
+                                <input type="text" class="form-control" id="fatherFirstName" name="FatherFirstName" value="@account.FatherFirstName" />
+                            </div>
+
+                            @* Mother's Name *@
+                            <div class="mb-3">
+                                <label for="motherLastName" class="form-label">Mother's Last Name:</label>
+                                <input type="text" class="form-control" id="motherLastName" name="MotherLastName" value="@account.MotherLastName" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="motherFirstName" class="form-label">Mother's First Name:</label>
+                                <input type="text" class="form-control" id="motherFirstName" name="MotherFirstName" value="@account.MotherFirstName" />
+                            </div>
+
+                            @* Guardian's Name *@
+                            <div class="mb-3">
+                                <label for="guardianLastName" class="form-label">Guardian's Last Name:</label>
+                                <input type="text" class="form-control" id="guardianLastName" name="GuardianLastName" value="@account.GuardianLastName" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="guardianFirstName" class="form-label">Guardian's First Name:</label>
+                                <input type="text" class="form-control" id="guardianFirstName" name="GuardianFirstName" value="@account.GuardianFirstName" />
+                            </div>
+
+                            <hr />
+
+                            @* Type of Disability *@
+                            <div class="mb-3">
+                                <label for="typeOfDisability" class="form-label">Type of Disability:</label>
+                                <input type="text" class="form-control" id="typeOfDisability" name="TypeOfDisability" value="@account.TypeOfDisability" />
+                            </div>
+
+                            <hr />
+
+                            @* Cause of Disability *@
+                            <div class="mb-3">
+                                <label for="causeOfDisability" class="form-label">Cause of Disability:</label>
+                                <input type="text" class="form-control" id="causeOfDisability" name="CauseOfDisability" value="@account.CauseOfDisability" />
+                            </div>
+
+                            <hr />
+
+                            @* Residence Address *@
+                            <div class="mb-3">
+                                <label for="houseNoAndStreet" class="form-label">House No. and Street:</label>
+                                <input type="text" class="form-control" id="houseNoAndStreet" name="HouseNoAndStreet" value="@account.HouseNoAndStreet" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="barangay" class="form-label">Barangay:</label>
+                                <input type="text" class="form-control" id="barangay" name="Barangay" value="@account.Barangay" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="municipality" class="form-label">Municipality:</label>
+                                <input type="text" class="form-control" id="municipality" name="Municipality" value="@account.Municipality" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="region" class="form-label">Region:</label>
+                                <input type="text" class="form-control" id="region" name="Region" value="@account.Region" />
+                            </div>
+
+                            <hr />
+
+                            @* Contact Details *@
+                            <div class="mb-3">
+                                <label for="landlineNo" class="form-label">Landline No.:</label>
+                                <input type="text" class="form-control" id="landlineNo" name="LandlineNo" value="@account.LandlineNo" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="mobileNo" class="form-label">Mobile No.:</label>
+                                <input type="text" class="form-control" id="mobileNo" name="MobileNo" value="@account.MobileNo" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="emailAddress" class="form-label">Email Address:</label>
+                                <input type="email" class="form-control" id="emailAddress" name="EmailAddress" value="@account.EmailAddress" />
+                            </div>
+
+                            <hr />
+
+                            @* Educational Attainment *@
+                            <div class="mb-3">
+                                <label for="educationalAttainment" class="form-label">Educational Attainment:</label>
+                                <input type="text" class="form-control" id="educationalAttainment" name="EducationalAttainment" value="@account.EducationalAttainment" />
+                            </div>
+
+                            <hr />
+
+                            @* Status of Employment *@
+                            <div class="mb-3">
+                                <label for="statusOfEmployment" class="form-label">Status of Employment:</label>
+                                <input type="text" class="form-control" id="statusOfEmployment" name="StatusOfEmployment" value="@account.StatusOfEmployment" />
+                            </div>
+
+                            <hr />
+
+                            @* Category of Employment *@
+                            <div class="mb-3">
+                                <label for="categoryOfEmployment" class="form-label">Category of Employment:</label>
+                                <input type="text" class="form-control" id="categoryOfEmployment" name="CategoryOfEmployment" value="@account.CategoryOfEmployment" />
+                            </div>
+
+                            <hr />
+
+                            @* Type of Employment *@
+                            <div class="mb-3">
+                                <label for="typeOfEmployment" class="form-label">Type of Employment:</label>
+                                <input type="text" class="form-control" id="typeOfEmployment" name="TypeOfEmployment" value="@account.TypeOfEmployment" />
+                            </div>
+
+                            <hr />
+
+                            @* Occupation *@
+                            <div class="mb-3">
+                                <label for="occupation" class="form-label">Occupation:</label>
+                                <input type="text" class="form-control" id="occupation" name="Occupation"
+                                       value="@(account.Occupation == "Other" && !string.IsNullOrWhiteSpace(account.OtherOccupation)
+                   ? account.OtherOccupation
+                   : account.Occupation)" />
+                            </div>
+
+                            <hr />
+
+                            @* Organization Information *@
+                            <div class="mb-3">
+                                <label for="organizationAffiliated" class="form-label">Organization Affiliated:</label>
+                                <input type="text" class="form-control" id="organizationAffiliated" name="OrganizationAffiliated" value="@account.OrganizationAffiliated" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="contactPerson" class="form-label">Contact Person:</label>
+                                <input type="text" class="form-control" id="contactPerson" name="ContactPerson" value="@account.ContactPerson" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="officeAddress" class="form-label">Office Address:</label>
+                                <input type="text" class="form-control" id="officeAddress" name="OfficeAddress" value="@account.OfficeAddress" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="officeTelNo" class="form-label">Tel. Nos:</label>
+                                <input type="text" class="form-control" id="officeTelNo" name="OfficeTelNo" value="@account.OfficeTelNo" />
+                            </div>
+
+                            <hr />
+
+                            @* ID Reference Numbers *@
+                            <div class="mb-3">
+                                <label for="sssNo" class="form-label">SSS No.:</label>
+                                <input type="text" class="form-control" id="sssNo" name="SSSNo" value="@account.SSSNo" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="gsisNo" class="form-label">GSIS No.:</label>
+                                <input type="text" class="form-control" id="gsisNo" name="GSISNo" value="@account.GSISNo" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="pagibigNo" class="form-label">PAG-IBIG No.:</label>
+                                <input type="text" class="form-control" id="pagibigNo" name="PagIBIGNo" value="@account.PagIBIGNo" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="psnNo" class="form-label">PSN No.:</label>
+                                <input type="text" class="form-control" id="psnNo" name="PSNNo" value="@account.PSNNo" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="philHealthNo" class="form-label">PhilHealth No.:</label>
+                                <input type="text" class="form-control" id="philHealthNo" name="PhilHealthNo" value="@account.PhilHealthNo" />
+                            </div>
+
+                            <hr />
+
+                            @* Accomplished By *@
+                            <div class="mb-3">
+                                <label for="accomplishByLastName" class="form-label">Last Name:</label>
+                                <input type="text" class="form-control" id="accomplishByLastName" name="AccomplishByLastName" value="@account.AccomplishByLastName" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="accomplishByFirstName" class="form-label">First Name:</label>
+                                <input type="text" class="form-control" id="accomplishByFirstName" name="AccomplishByFirstName" value="@account.AccomplishByFirstName" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="accomplishByMiddleName" class="form-label">Middle Name:</label>
+                                <input type="text" class="form-control" id="accomplishByMiddleName" name="AccomplishByMiddleName" value="@account.AccomplishByMiddleName" />
+                            </div>
+
+
+                            <div class="d-flex justify-content-center align-items-center mb-3">
+                                <button type="button" class="btn btn-primary" onclick="submitEditForm('@account.Id')">Save Changes</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+
+
+    <script>
+        // Define the function outside of $(document).ready()
+        function submitEditForm(accountId) {
+            var formData = $("#editAccountForm-" + accountId).serializeArray();
+            var jsonData = {};
+            $(formData).each(function (index, obj) {
+                jsonData[obj.name] = obj.value;
+            });
+            jsonData.__RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("UpdateDetails", "Admin")' + '?id=' + accountId,
+                contentType: 'application/json',
+                data: JSON.stringify(jsonData), // Send JSON string
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            // Optionally refresh the page or update the UI here
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error details:", xhr.responseText);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while updating the account.',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+
+        }
+
+        // Initialization code inside $(document).ready()
+        $(document).ready(function () {
+            console.log("Document is ready");
+        });
+    </script>

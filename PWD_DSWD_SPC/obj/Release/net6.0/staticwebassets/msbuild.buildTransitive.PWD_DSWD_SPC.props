@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\PWD_DSWD_SPC.props" />
+</Project>

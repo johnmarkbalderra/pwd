@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.Title = "Report";
+    Layout = "~/Views/User/User_Layout.cshtml";
+}
+
+<!-- ========================= Main (CONTENT) ==================== -->
+<div class="main">
+    <div class="topbar">
+        <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+        </div>
+
+
+
+        @* user profile *@
+        <div class="user">
+            <a href="@Url.Action("AccountSetting", "User")">
+                <ion-icon name="person-outline" style="color: #0b2271;"></ion-icon>
+            </a>
+        </div>
+    </div>
+
+
+    <!-- Report Content -->
+    <h2 class="text-start p-5" style="color: #0b2271;">
+        Report
+        <p class="lead mt-2" style="font-size:13px">
+            a concern, problem, and claims.
+        </p>
+    </h2>
+
+    <div class="pt-5 pb-5 mb-3" id="details-card">
+        <!-- Establishment txtfield -->
+        <form method="post" asp-action="Report">
+            @Html.AntiForgeryToken()
+            <h6>Establishment</h6>
+            <div class="form-group">
+                <input class="form-control mb-3" type="text" id="establishment" name="Establishment" required>
+            </div>
+            <h6>Branch</h6>
+            <div class="form-group">
+                <input class="form-control mb-3" type="text" id="branch" name="Branch" required>
+            </div>
+            <!-- Problem txtarea-->
+            <h6>Problem</h6>
+            <div class="form-group">
+                <textarea class="form-control mb-3" name="problemDescription" id="problemDescription" rows="5" placeholder="Describe your problem here..." required></textarea>
+            </div>
+            <!-- Submit btn-->
+            <button type="submit" class="form-control btn btn-light btn-block mt-3 text-white" style="background-color: #0b2271;">Submit</button>
+
+        </form>
+        
+    </div>
+
+</div>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            var successMessage = '@TempData["Success"]';
+            var errorMessage = '@TempData["Error"]';
+
+            if (successMessage) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: successMessage
+                });
+            } else if (errorMessage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMessage
+                });
+            }
+        });
+    </script>
+}

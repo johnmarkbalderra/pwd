@@ -1,0 +1,59 @@
+﻿.account-block {
+    padding: 0;
+    background-image: url(../../assets/img/doh.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    position: relative;
+}
+
+    .account-block .overlay {
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .account-block .account-testimonial {
+        text-align: center;
+        color: #fff;
+        position: absolute;
+        margin: 0 auto;
+        padding: 0 1.75rem;
+        bottom: 3rem;
+        left: 0;
+        right: 0;
+    }
+
+.text-theme {
+    color: #0E2B95 !important;
+}
+
+.btn-theme {
+    background-color: #0e2b95;
+    border-color: #0E2B95;
+    color: #fff;
+}
+
+#main-wrapper {
+    margin-top: 60px;
+    width: 100%;
+}
+
+.log-in {
+    background: #0E2B95;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.btn-theme {
+    width: inherit;
+}

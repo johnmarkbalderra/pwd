@@ -1,0 +1,621 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\obj\\Release\\net6.0\\linux-x64\\scopedcss\\projectbundle\\PWD_DSWD_SPC.bundle.scp.css",
+      "PackagePath": "staticwebassets\\PWD_DSWD_SPC.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\bootstrap\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\bootstrap\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\bootstrap\\js\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\bootstrap\\js\\bootstrap.min.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\css\\landing-styles.css",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\css\\landing-styles.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\css\\zectStudio---Sidebar-Menu-by-bbbootstrap.css",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\css\\zectStudio---Sidebar-Menu-by-bbbootstrap.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\FontAwesome.otf",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\FontAwesome.otf"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-brands-400.eot",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-brands-400.eot"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-brands-400.svg",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-brands-400.svg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-brands-400.ttf",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-brands-400.ttf"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-brands-400.woff",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-brands-400.woff"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-brands-400.woff2",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-brands-400.woff2"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-regular-400.eot",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-regular-400.eot"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-regular-400.svg",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-regular-400.svg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-regular-400.ttf",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-regular-400.ttf"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-regular-400.woff",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-regular-400.woff"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-regular-400.woff2",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-regular-400.woff2"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-solid-900.eot",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-solid-900.eot"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-solid-900.svg",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-solid-900.svg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-solid-900.ttf",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-solid-900.ttf"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-solid-900.woff",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-solid-900.woff"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fa-solid-900.woff2",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fa-solid-900.woff2"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\font-awesome.min.css",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\font-awesome.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fontawesome-all.min.css",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fontawesome-all.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fontawesome-webfont.eot",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fontawesome-webfont.eot"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fontawesome-webfont.svg",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fontawesome-webfont.svg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fontawesome-webfont.ttf",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fontawesome-webfont.ttf"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fontawesome-webfont.woff",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fontawesome-webfont.woff"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fontawesome-webfont.woff2",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fontawesome-webfont.woff2"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\fonts\\fontawesome5-overrides.min.css",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\fonts\\fontawesome5-overrides.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\img\\DSWD_logo.png",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\img\\DSWD_logo.png"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\img\\doh.png",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\img\\doh.png"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\img\\icon_arrow-left.svg",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\img\\icon_arrow-left.svg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\img\\icon_arrow-right.svg",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\img\\icon_arrow-right.svg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\js\\bs-init.js",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\js\\bs-init.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\js\\chart.min.js",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\js\\chart.min.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\js\\table-feature.js",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\js\\table-feature.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\ADMIN-ASSET\\js\\zectStudio---Sidebar-Menu-by-bbbootstrap-sidemenu.js",
+      "PackagePath": "staticwebassets\\ADMIN-ASSET\\js\\zectStudio---Sidebar-Menu-by-bbbootstrap-sidemenu.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\User-Assets\\7-11.png",
+      "PackagePath": "staticwebassets\\User-Assets\\7-11.png"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\User-Assets\\alfamart.jpg",
+      "PackagePath": "staticwebassets\\User-Assets\\alfamart.jpg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\User-Assets\\doh.png",
+      "PackagePath": "staticwebassets\\User-Assets\\doh.png"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\User-Assets\\lianas.png",
+      "PackagePath": "staticwebassets\\User-Assets\\lianas.png"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\User-Assets\\main.js",
+      "PackagePath": "staticwebassets\\User-Assets\\main.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\User-Assets\\puregold.jpg",
+      "PackagePath": "staticwebassets\\User-Assets\\puregold.jpg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\User-Assets\\shoppers.png",
+      "PackagePath": "staticwebassets\\User-Assets\\shoppers.png"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\User-Assets\\sm.png",
+      "PackagePath": "staticwebassets\\User-Assets\\sm.png"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\User-Assets\\user.css",
+      "PackagePath": "staticwebassets\\User-Assets\\user.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\bootstrap\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\assets\\bootstrap\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\bootstrap\\js\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\assets\\bootstrap\\js\\bootstrap.min.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\css\\Login-with-overlay-image.css",
+      "PackagePath": "staticwebassets\\assets\\css\\Login-with-overlay-image.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\css\\Pretty-Footer-.css",
+      "PackagePath": "staticwebassets\\assets\\css\\Pretty-Footer-.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\css\\animated-services.css",
+      "PackagePath": "staticwebassets\\assets\\css\\animated-services.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\css\\styles.css",
+      "PackagePath": "staticwebassets\\assets\\css\\styles.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\FontAwesome.otf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\FontAwesome.otf"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-brands-400.eot",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-brands-400.eot"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-brands-400.svg",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-brands-400.svg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-brands-400.ttf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-brands-400.ttf"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-brands-400.woff",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-brands-400.woff"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-brands-400.woff2",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-brands-400.woff2"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-regular-400.eot",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-regular-400.eot"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-regular-400.svg",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-regular-400.svg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-regular-400.ttf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-regular-400.ttf"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-regular-400.woff",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-regular-400.woff"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-regular-400.woff2",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-regular-400.woff2"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-solid-900.eot",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-solid-900.eot"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-solid-900.svg",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-solid-900.svg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-solid-900.ttf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-solid-900.ttf"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-solid-900.woff",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-solid-900.woff"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fa-solid-900.woff2",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fa-solid-900.woff2"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\font-awesome.min.css",
+      "PackagePath": "staticwebassets\\assets\\fonts\\font-awesome.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fontawesome-all.min.css",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fontawesome-all.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fontawesome-webfont.eot",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fontawesome-webfont.eot"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fontawesome-webfont.svg",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fontawesome-webfont.svg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fontawesome-webfont.ttf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fontawesome-webfont.ttf"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fontawesome-webfont.woff",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fontawesome-webfont.woff"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fontawesome-webfont.woff2",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fontawesome-webfont.woff2"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\fonts\\fontawesome5-overrides.min.css",
+      "PackagePath": "staticwebassets\\assets\\fonts\\fontawesome5-overrides.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\img\\benefits.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\benefits.jpg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\img\\benefits1.1.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\benefits1.1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\img\\benefits1.2.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\benefits1.2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\img\\doh.png",
+      "PackagePath": "staticwebassets\\assets\\img\\doh.png"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\img\\slide.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\slide.jpg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\img\\slide.png",
+      "PackagePath": "staticwebassets\\assets\\img\\slide.png"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\img\\slide2.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\slide2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\img\\slide2.png",
+      "PackagePath": "staticwebassets\\assets\\img\\slide2.png"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\img\\slide3.1.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\slide3.1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\img\\slide3.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\slide3.jpg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\img\\slide4.1.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\slide4.1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\assets\\img\\slide4.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\slide4.jpg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\banir.jpg",
+      "PackagePath": "staticwebassets\\banir.jpg"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\doh.png",
+      "PackagePath": "staticwebassets\\doh.png"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "PackagePath": "staticwebassets\\lib\\bootstrap"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\UPDATED SANGAG 7070 (PUKE)\\PWD_DSWD_SPC\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\linux-x64\\staticwebassets\\msbuild.PWD_DSWD_SPC.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\linux-x64\\staticwebassets\\msbuild.build.PWD_DSWD_SPC.props",
+      "PackagePath": "build\\PWD_DSWD_SPC.props"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\linux-x64\\staticwebassets\\msbuild.buildMultiTargeting.PWD_DSWD_SPC.props",
+      "PackagePath": "buildMultiTargeting\\PWD_DSWD_SPC.props"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\linux-x64\\staticwebassets\\msbuild.buildTransitive.PWD_DSWD_SPC.props",
+      "PackagePath": "buildTransitive\\PWD_DSWD_SPC.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

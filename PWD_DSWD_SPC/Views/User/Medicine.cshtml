@@ -1,0 +1,667 @@
+﻿@{
+    ViewData["Title"] = "Medicine Booklet";
+    Layout = "~/Views/User/User_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .borderless-input {
+            border: none;
+            background-color: transparent;
+            outline: none;
+            pointer-events: none; /* Make the field truly readonly */
+        }
+
+            .borderless-input:focus {
+                border: none;
+                outline: none;
+            }
+
+    </style>
+</head>
+
+<!-- ========================= Main (CONTENT) ==================== -->
+<div class="main">
+    <div class="topbar">
+        <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+        </div>
+
+        <!-- user profile -->
+        <div class="user">
+            <a href="@Url.Action("AccountSetting", "User")">
+                <ion-icon name="person-outline" style="color: #0b2271;"></ion-icon>
+            </a>
+        </div>
+    </div>
+
+    <div class="pt-5 pb-5" style="font-size: clamp(9px, 2vw, 13px); border-radius: 20px; background-color: #fff; color: #0b2271; margin-left: 10px; margin-right: 10px; padding-left: 20px; padding-right: 20px; box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);">
+        <!--Header w/btn-->
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Medicines</h3>
+            <button type="button" id="addMedicineBtn" class="btn btn-sm btn-light" style="color: #fff; background-color: #0b2271;">
+                Add Medicine Prescribed
+            </button>
+        </div>
+        <div>
+            @if (ViewBag.Establishment != null && ViewBag.Branch != null)
+            {
+                <p><strong>Establishment:</strong> @ViewBag.Establishment</p>
+                <p><strong>Branch:</strong> @ViewBag.Branch</p>
+                <p><strong>Date:</strong> @TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Singapore Standard Time")).ToString("MMMM dd, yyyy h:mm tt")</p>
+            }
+            else
+            {
+                <p>No establishment or branch information available.</p>
+            }
+        </div>
+
+        <div class="table-responsive">
+            <table class="table" id="medicineTable">
+                <thead>
+                    <tr>
+                        <th>Medicine Prescribed</th>
+                        <th>Prescribed Quantity</th>
+                        <th>Price</th>
+                        <th>Date</th>
+                        <th>Purchased Quantity</th>
+                        <th>Balance (Quantity)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="medicineTableBody">
+                    <!-- Items will be inserted here dynamically -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Summary section -->
+        <div class="d-flex justify-content-between align-items-center">
+            <h6>Total Price: <span id="totalPrice">0</span></h6>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <h6>Total Discounted Amount: <span id="totalDiscountedAmount">0</span></h6>
+        </div>
+
+        <div class="text-center form-check mt-3">
+            <label class="form-check-label" for="acknowledgeCheckbox">
+                <input type="checkbox" class="form-check-input" id="acknowledgeCheckbox">
+                I hereby certify that the correct discount has been given for this transaction.
+            </label>
+
+            <div class="mt-3">
+                <button type="button" class="btn btn-success submit" id="submitBtn" disabled>Submit</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal Structure -->
+    <div class="modal fade" id="listModal" tabindex="-1" aria-labelledby="listModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-white" style="background-color:#0B2271">
+                    <h5 class="modal-title" id="listModalLabel">Transaction Summary</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <!-- Signature Content -->
+                    <div id="eSignatureSection">
+                        <div class="mt-4">
+                            <label for="ptrNo"><strong>PTR No.:</strong></label>
+                            <input type="text" id="ptrNo" class="form-control mb-3" placeholder="Enter PTR No.">
+                        </div>
+                        <div>
+                            <label for="attendingPhysician"><strong>Attending Physician:</strong></label>
+                            <input type="text" id="attendingPhysician" class="form-control mb-3" placeholder="Enter Attending Physician">
+                        </div>
+                        <div class="text-center mt-4">
+                            <span>E-Signature to Complete the Transaction</span>
+                            <div class="d-flex justify-content-center">
+                                <canvas id="eSignatureCanvas" style="border:1px solid black; width: 100%; max-width: 400px; height: 200px;"></canvas>
+                            </div>
+                            <div class="mt-3">
+                                <button class="btn btn-warning clear-signature">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-success" id="submitChangesButton">Proceed</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Element References
+        const medicineTable = document.querySelector("#medicineTable tbody");
+        const addMedicineBtn = document.getElementById("addMedicineBtn");
+        const acknowledgeCheckbox = document.getElementById("acknowledgeCheckbox");
+        const submitBtn = document.getElementById("submitBtn");
+        const eSignatureCanvas = document.getElementById("eSignatureCanvas");
+        const clearSignatureBtn = document.querySelector(".clear-signature");
+        const listModal = new bootstrap.Modal(document.getElementById("listModal"));
+
+        let transactionData = {}; // Object to store partial transaction data
+
+        // Computation for totals
+        const totalPriceEl = document.getElementById("totalPrice");
+        const totalDiscountedAmountEl = document.getElementById("totalDiscountedAmount");
+        let totalPrice = 0;
+        let totalDiscountedAmount = 0;
+
+        // Initialize Signature Pad
+        const signaturePad = new SignaturePad(eSignatureCanvas);
+
+        // Function to Clear Signature Pad
+        const clearSignature = () => {
+            signaturePad.clear();
+        };
+
+        // Attach Event Listener to Clear Signature Button
+        clearSignatureBtn.addEventListener("click", clearSignature);
+
+        // Function to Add Event Listener to Delete Button in Each Row
+        const addDeleteEventListener = () => {
+            document.querySelectorAll(".remove-row").forEach(button => {
+                button.addEventListener("click", (event) => {
+                    const row = event.target.closest("tr"); // Get the closest row
+                    if (row) {
+                        row.remove(); // Remove the row from the table
+                        calculateTotals(); // Recalculate the totals after deletion
+                    }
+                });
+            });
+        };
+
+        // Function to Add a New Medicine Row
+        const addMedicineRow = (transaction = {}) => {
+            const row = document.createElement("tr");
+
+            // Generate a new MedTransactionId if not provided
+            const medTransactionId = transaction.MedTransactionId || generateGuid(); // Generate a new GUID if not provided
+
+            row.innerHTML = `
+                            <td><input type="text" class="medicineName" value="${transaction.MedicineName || ''}" placeholder="Enter Medicine Name" required /></td>
+                            <td><input type="number" class="prescribedQuantity" min="0" value="${transaction.PrescribedQuantity || 0}" required /></td>
+                            <td><input type="number" class="price" min="0" step="0.01" value="${transaction.Price || 0}" required></td>
+                            <td>${transaction.DatePurchased ? new Date(transaction.DatePurchased).toLocaleString() : new Date().toLocaleString()}</td>
+                            <td><input type="number" class="purchasedQuantity" min="0" value="${transaction.PurchasedQuantity || 0}" required /></td>
+                            <td><input type="number" class="balanceQuantity" value="${transaction.RemainingBalance || 0}" readonly /></td>
+                            <td>
+                                <input type="hidden" class="medTransactionId" value="${medTransactionId}" />
+                                     <button type="button" class="btn btn-success btn-sm list-modal-btn" data-is-new="true">
+                                    <i class="fa-solid fa-list"></i>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm remove-row">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </td>
+                        `;
+
+            medicineTable.appendChild(row);
+
+            // Add event listeners for dynamic calculation
+            row.querySelector(".prescribedQuantity").addEventListener("input", updateBalance);
+            row.querySelector(".purchasedQuantity").addEventListener("input", updateBalance);
+            // Add delete event listener to the new row
+            addDeleteEventListener();
+        };
+
+        // Function to generate a GUID (for MedTransactionId)
+        function generateGuid() {
+            // Create a GUID (32 characters in 8-4-4-4-12 format)
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16 | 0,
+                    v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // Add a New Row When "Add Medicine Prescribed" Button is Clicked
+        addMedicineBtn.addEventListener("click", addMedicineRow);
+
+        // Function to Handle Click on List Button for New Rows
+        $(document).on('click', '.list-modal-btn', function () {
+            const isNew = $(this).data('is-new');
+            if (isNew) {
+                // Handle new transaction logic
+                openModalForNewTransaction();
+            } else {
+                // Fetch existing transaction details
+                fetchTransactionDetails(transactionId);
+            }
+        });
+
+        // Function to Open Modal for New Row (No Server Fetch)
+        function openModalForNewTransaction(transactionId) {
+            document.getElementById("submitChangesButton").dataset.transactionId = transactionId;
+            document.getElementById("ptrNo").value = "";
+            document.getElementById("attendingPhysician").value = "";
+            eSignatureCanvas.getContext("2d").clearRect(0, 0, eSignatureCanvas.width, eSignatureCanvas.height);
+
+            // Set the transactionData object before opening the modal
+            transactionData = {
+                ptrNo: document.getElementById("ptrNo").value,
+                attendingPhysician: document.getElementById("attendingPhysician").value,
+                signature: eSignatureCanvas.toDataURL("image/png")
+            };
+            $('#listModal').modal('show');
+        }
+
+        document.getElementById("submitChangesButton").addEventListener("click", async () => {
+            // Check if a transactionId is set
+            const transactionId = document.getElementById("submitChangesButton").dataset.transactionId;
+            const ptrNo = document.getElementById("ptrNo").value.trim();
+            const attendingPhysician = document.getElementById("attendingPhysician").value.trim();
+            const eSignatureCanvas = document.getElementById("eSignatureCanvas");
+            const signaturePad = new SignaturePad(eSignatureCanvas);
+
+            const signature = eSignatureCanvas.toDataURL("image/png");
+
+            // Ensure required fields are filled
+            if (!ptrNo || !attendingPhysician || !signaturePad.isEmpty()) {
+                alert("Please complete all required fields.");
+                return;
+            }
+
+            // Partial save for a new transaction
+            transactionData = {
+                ptrNo: ptrNo,
+                attendingPhysician: attendingPhysician,
+                signature: signature
+            };
+
+            console.log("Partial save data:", transactionData);
+
+            // Close the modal after saving the partial data
+            $('#listModal').modal('hide');
+
+        });
+
+
+        // Update Balance Function
+        function updateBalance(event) {
+            const row = event.target.closest("tr");
+            const prescribedQuantity = parseInt(row.querySelector(".prescribedQuantity").value || "0", 10);
+            const purchasedQuantity = parseInt(row.querySelector(".purchasedQuantity").value || "0", 10);
+
+            // Calculate balance
+            const balanceQuantity = prescribedQuantity - purchasedQuantity;
+            row.querySelector(".balanceQuantity").value = balanceQuantity >= 0 ? balanceQuantity : 0;
+            calculateTotals();
+        }
+
+        // Calculate Totals Function
+        function calculateTotals() {
+            totalPrice = 0;
+            totalDiscountedAmount = 0;
+
+            document.querySelectorAll("#medicineTable tbody tr").forEach(row => {
+                const purchasedQuantity = parseInt(row.querySelector(".purchasedQuantity").value || "0", 10);
+                const price = parseFloat(row.querySelector(".price").value || "0");
+
+                const rowTotal = purchasedQuantity * price;
+                totalPrice += rowTotal;
+            });
+
+            totalDiscountedAmount = totalPrice * 0.8; // Deduct 20%
+
+            totalPriceEl.textContent = totalPrice.toFixed(2);
+            totalDiscountedAmountEl.textContent = totalDiscountedAmount.toFixed(2);
+        }
+
+        // Enable or Disable Submit Button Based on Checkbox
+        acknowledgeCheckbox.addEventListener("change", () => {
+            submitBtn.disabled = !acknowledgeCheckbox.checked;
+        });
+
+        //Submit Button for Full Transaction Submission
+        submitBtn.addEventListener("click", () => {
+            const items = [];
+
+            document.querySelectorAll("#medicineTable tbody tr").forEach(row => {
+                const medTransactionIdElement = row.querySelector(".medTransactionId");
+                const medTransactionId = medTransactionIdElement ? medTransactionIdElement.value : null;
+
+                const medicineName = row.querySelector(".medicineName").value;
+                const prescribedQuantity = parseInt(row.querySelector(".prescribedQuantity").value) || 0;
+                const purchasedQuantity = parseInt(row.querySelector(".purchasedQuantity").value) || 0;
+                const remainingBalance = parseInt(row.querySelector(".balanceQuantity").value) || 0;
+                const price = parseFloat(row.querySelector(".price").value) || 0;
+
+                const totalPrice = purchasedQuantity * price;
+                const discountedPrice = totalPrice * 0.8; // Assuming 20% discount
+
+                // Check if this row has a MedTransactionId (i.e., it's an update)
+                if (medTransactionId) {
+                    // It's an existing transaction, prepare for update
+                    items.push({
+                        MedTransactionId: medTransactionId,
+                        AccountId: "@ViewBag.AccountId",
+                        MedicineName: medicineName,
+                        PrescribedQuantity: prescribedQuantity,
+                        PurchasedQuantity: purchasedQuantity,
+                        RemainingBalance: remainingBalance,
+                        Price: price,
+                        TotalPrice: totalPrice,
+                        DiscountedPrice: discountedPrice,
+                        DatePurchased: new Date().toISOString(),
+                        AttendingPhysician: transactionData.attendingPhysician,
+                        PTRNo: transactionData.ptrNo,
+                        Signature: transactionData.signature,
+                        EstablishmentName: "@ViewBag.Establishment",
+                        Branch: "@ViewBag.Branch"
+                    });
+                } else {
+                    // New transaction, prepare for creation
+                    items.push({
+                        MedTransactionId: generateGuid(), // New transaction ID for creation
+                        AccountId: "@ViewBag.AccountId",
+                        MedicineName: medicineName,
+                        PrescribedQuantity: prescribedQuantity,
+                        PurchasedQuantity: purchasedQuantity,
+                        RemainingBalance: remainingBalance,
+                        Price: price,
+                        TotalPrice: totalPrice,
+                        DiscountedPrice: discountedPrice,
+                        DatePurchased: new Date().toISOString(),
+                        AttendingPhysician: transactionData.attendingPhysician,
+                        PTRNo: transactionData.ptrNo,
+                        Signature: transactionData.signature || "",
+                        EstablishmentName: "@ViewBag.Establishment",
+                        Branch: "@ViewBag.Branch"
+                    });
+                }
+            });
+
+            console.log("Prepared items:", items); // Log items to debug
+
+            if (items.length === 0) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'No transaction data to submit.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            $.ajax({
+                url: '/User/SubmitTransaction',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(items),
+                success: function (response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                    Swal.fire({
+                        title: 'Error',
+                        text: xhr.responseText,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+
+
+    });
+
+    //another shit for fetching and updating
+    document.addEventListener("DOMContentLoaded", async () => {
+        const accountId = "@ViewBag.AccountId"; // From ViewBag
+        // Computation for totals
+        const totalPriceEl = document.getElementById("totalPrice");
+        const totalDiscountedAmountEl = document.getElementById("totalDiscountedAmount");
+        let totalPrice = 0;
+        let totalDiscountedAmount = 0;
+
+        // Fetch and display unfinished transactions
+        async function fetchUnfinishedTransactions() {
+            try {
+                const response = await fetch(`/User/GetUnfinishedTransactions?accountId=${accountId}`);
+                if (!response.ok) throw new Error(await response.text());
+
+                const transactions = await response.json();
+                transactions.forEach(transaction => addRowFromTransaction(transaction));
+            } catch (error) {
+                console.error("Error fetching transactions:", error.message);
+            }
+        }
+
+        // Add an existing transaction row to the table
+        function addRowFromTransaction(transaction) {
+            const row = document.createElement("tr");
+            row.dataset.transactionId = transaction.medTransactionId; // Store ID for updates
+
+            row.innerHTML = `
+                <td><input type="text" class="medicineName borderless-input" value="${transaction.medicineName}" readonly /></td>
+                <td><input type="number" class="prescribedQuantity borderless-input" value="${transaction.remainingBalance}" readonly /></td>
+                <td><input type="number" class="price" value="${transaction.price}" /></td>
+                <td>${new Date(transaction.datePurchased).toLocaleString()}</td>
+                <td><input type="number" class="purchasedQuantity" value="0" /></td>
+                <td><input type="number" class="balanceQuantity borderless-input" value="0" readonly /></td>
+                <td>
+                        <button type="button" class="btn btn-success btn-sm list-button" data-transaction-id="${transaction.medTransactionId}">
+                        <i class="fa-solid fa-list"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-sm remove-row">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </td>
+            `;
+
+            const tableBody = document.querySelector("#medicineTable tbody");
+            tableBody.appendChild(row);
+
+            // Add dynamic calculation for Balance (Quantity)
+            const purchasedQuantityInput = row.querySelector(".purchasedQuantity");
+            purchasedQuantityInput.addEventListener("input", () => updateBalance(row));
+        }
+
+        // Function to update balance dynamically
+        function updateBalance(row) {
+            const prescribedQuantity = parseInt(row.querySelector(".prescribedQuantity").value) || 0;
+            const purchasedQuantity = parseInt(row.querySelector(".purchasedQuantity").value) || 0;
+            const balanceInput = row.querySelector(".balanceQuantity");
+
+            //balanceInput.value = Math.max(0, prescribedQuantity - purchasedQuantity);
+
+            // Calculate balance
+            const balanceQuantity = prescribedQuantity - purchasedQuantity;
+            row.querySelector(".balanceQuantity").value = balanceQuantity >= 0 ? balanceQuantity : 0;
+            calculateTotals();
+        }
+
+        // Calculate Totals Function
+        function calculateTotals() {
+            totalPrice = 0;
+            totalDiscountedAmount = 0;
+
+            document.querySelectorAll("#medicineTable tbody tr").forEach(row => {
+                const purchasedQuantity = parseInt(row.querySelector(".purchasedQuantity").value || "0", 10);
+                const price = parseFloat(row.querySelector(".price").value || "0");
+
+                const rowTotal = purchasedQuantity * price;
+                totalPrice += rowTotal;
+            });
+
+            totalDiscountedAmount = totalPrice * 0.8; // Deduct 20%
+
+            totalPriceEl.textContent = totalPrice.toFixed(2);
+            totalDiscountedAmountEl.textContent = totalDiscountedAmount.toFixed(2);
+        }
+
+        // Open modal and fetch PTR No and Attending Physician when the list button is clicked
+        document.querySelector("#medicineTable").addEventListener("click", async (event) => {
+            if (event.target.closest(".list-button")) {
+                const transactionId = event.target.closest(".list-button").dataset.transactionId;
+                // Store the transactionId in the modal button
+                document.getElementById("submitChangesButton").dataset.transactionId = transactionId;
+                const transaction = await fetchTransactionDetails(transactionId);
+                populateModal(transaction);
+            }
+        });
+
+        // Fetch transaction details including PTR No and Attending Physician
+        async function fetchTransactionDetails(transactionId) {
+            try {
+                console.log("Fetching transaction details for ID:", transactionId);
+                const response = await fetch(`/User/GetTransactionDetails?transactionId=${transactionId}`);
+                if (!response.ok) throw new Error(await response.text());
+                return await response.json();
+                console.log("Fetched Transaction:", transaction); // Check if signature is in the response
+                return transaction;
+            } catch (error) {
+                console.error("Error fetching transaction details:", error.message);
+            }
+        }
+        // Populate modal with transaction details
+        function populateModal(transaction) {
+            console.log("Populating modal with transaction:", transaction);
+            document.getElementById("ptrNo").value = transaction.ptrNo;
+            document.getElementById("attendingPhysician").value = transaction.attendingPhysician;
+
+            // Check if there's an existing signature
+            const eSignatureCanvas = document.getElementById("eSignatureCanvas");
+            // Set canvas dimensions before drawing the signature
+            eSignatureCanvas.width = 400;  // Adjust this value based on the expected signature size
+            eSignatureCanvas.height = 200; // Adjust this value similarly
+            if (transaction.signature) {
+                // If a signature exists, draw it on the canvas
+                const context = eSignatureCanvas.getContext("2d");
+                const img = new Image();
+
+                console.log("Loading signature image:", transaction.signature);
+
+
+                img.onload = function () {
+                    console.log("Signature image loaded successfully");
+                    const context = eSignatureCanvas.getContext("2d");
+                    context.clearRect(0, 0, eSignatureCanvas.width, eSignatureCanvas.height); // Clear the canvas before drawing
+                    // Draw the image scaled to fit the canvas
+                    // Dynamically adjust the canvas size based on the image dimensions
+                    const imgWidth = img.width;
+                    const imgHeight = img.height;
+                    eSignatureCanvas.width = imgWidth;
+                    eSignatureCanvas.height = imgHeight;
+
+                    // Draw the image scaled to fit the canvas size
+                    context.drawImage(img, 0, 0, imgWidth, imgHeight);
+                };
+                img.onerror = function () {
+                    console.error("Error loading the signature image");
+                };
+                img.src = transaction.signature; // Set the source to the Base64 signature string
+            } else {
+                // If no signature, clear the canvas
+                eSignatureCanvas.getContext("2d").clearRect(0, 0, eSignatureCanvas.width, eSignatureCanvas.height);
+            }
+
+            $('#listModal').modal('show'); // Show the modal
+        }
+        // Handle the Submit Changes button click
+        document.getElementById("submitChangesButton").addEventListener("click", async () => {
+            const transactionId = document.getElementById("submitChangesButton").dataset.transactionId;
+            const ptrNo = document.getElementById("ptrNo").value.trim();
+            const attendingPhysician = document.getElementById("attendingPhysician").value.trim();
+            const eSignatureCanvas = document.getElementById("eSignatureCanvas");
+            const signaturePad = new SignaturePad(eSignatureCanvas);
+
+            // Extract the E-Signature as a Base64 string
+            const eSignature = eSignatureCanvas.toDataURL("image/png"); // Converts the canvas to a PNG image string
+
+            // Ensure at least one field has been modified
+            if (!ptrNo && !attendingPhysician && (!eSignatureCanvas || eSignatureCanvas.isEmpty())) {
+                alert("Please modify at least one field before submitting.");
+                return;
+            }
+
+            // If MedTransactionId is undefined or not valid, don't proceed
+            if (!transactionId || transactionId === 'undefined') {
+                Swal.fire({
+                    title: 'New transaction detected',
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            // Create the updated transaction object to send to the server
+            const updatedTransaction = {};
+
+            if (transactionId) updatedTransaction.MedTransactionId = transactionId;
+            if (ptrNo) updatedTransaction.PTRNo = ptrNo;
+            if (attendingPhysician) updatedTransaction.AttendingPhysician = attendingPhysician;
+            if (!signaturePad.isEmpty()) updatedTransaction.Signature = signaturePad.toDataURL("image/png");
+
+            // Log to confirm the transaction object
+            console.log("Updated Transaction Object:", updatedTransaction);
+
+            // If it's an existing transaction (i.e., transactionId already exists and is not generated for new), call update
+            if (updatedTransaction.MedTransactionId && updatedTransaction.MedTransactionId !== 'new') {
+                const success = await updateTransactionDetails(updatedTransaction);
+
+                if (success) {
+                    $('#listModal').modal('hide');
+                } else {
+                    alert("Failed to update transaction.");
+                }
+            } else {
+                alert("This is a new transaction. No update required.");
+            }
+        });
+
+        // Update the transaction details in the database
+        async function updateTransactionDetails(updatedTransaction) {
+            if (updatedTransaction.MedTransactionId && updatedTransaction.MedTransactionId !== 'new') {
+
+                // Log the data being sent for debugging
+                console.log("Transaction ID:", updatedTransaction.MedTransactionId);
+                console.log("Updated Transaction Object:", updatedTransaction);
+
+                const response = await fetch(`/User/UpdateTransactionDetails`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updatedTransaction)
+                });
+
+                if (!response.ok) throw new Error(await response.text());
+                return true; // Success
+            }
+        }
+
+        // Fetch unfinished transactions on load
+        await fetchUnfinishedTransactions();
+    });
+</script>
+</html>
+

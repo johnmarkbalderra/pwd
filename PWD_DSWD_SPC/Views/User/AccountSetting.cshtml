@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "Account Setting";
+    Layout = "~/Views/User/User_Layout.cshtml";
+}
+
+<!-- ========================= Main (CONTENT) ==================== -->
+<div class="main">
+    <div class="topbar">
+        <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+        </div>
+
+
+
+        @* user profile *@
+        <div class="user">
+            <a href="@Url.Action("AccountSetting", "User")">
+                <ion-icon name="person-outline" style="color: #0b2271;"></ion-icon>
+            </a>
+        </div>
+    </div>
+
+
+    <!-- Account Setting Content -->
+    <h2 class="text-start p-5" style="color: #0b2271;">
+        Account Setting
+        <p class="lead mt-2" style="font-size:13px">
+            Update your info to keep your account.
+        </p>
+    </h2>
+
+    <!-- PASSWORD CHANGING -->
+    <div class="pt-5 pb-5" id="details-card">
+        <h6>Change Password</h6>
+
+        <!-- Display success or error messages -->
+        @if (ViewBag.PasswordChangeSuccess != null)
+        {
+            <div class="alert alert-success">
+                @ViewBag.PasswordChangeSuccess
+            </div>
+        }
+        @if (ViewBag.PasswordChangeError != null)
+        {
+            <div class="alert alert-danger">
+                @ViewBag.PasswordChangeError
+            </div>
+        }
+
+        <form action="@Url.Action("ChangePassword", "User")" method="post">
+            <div class="form-group">
+                <!-- Current Password -->
+                <input class="form-control mb-3" type="password" name="currentPassword" placeholder="Current Password" required>
+
+                <!-- New Password -->
+                <input class="form-control mb-1" type="password" name="newPassword" placeholder="New Password" required>
+                <small id="passwordHelpBlock" class="form-text text-muted">
+                    Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                </small>
+
+                <!-- Confirm Password -->
+                <input class="form-control mt-1" type="password" name="confirmPassword" placeholder="Confirm Password" required>
+                <small id="passwordHelpBlock" class="form-text text-muted">
+                    Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                </small>
+
+                <!-- Validation Message -->
+                <div id="passwordMismatch" class="text-danger mt-2" style="display:none;">
+                    Password and Confirm Password do not match.
+                </div>
+            </div>
+            <button type="submit" class="form-control btn btn-light btn-block mt-3 text-white" style="background-color: #0b2271;">Submit</button>
+        </form>
+    </div>
+</div>

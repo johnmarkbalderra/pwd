@@ -1,0 +1,163 @@
+﻿@{
+    ViewBag.Title = "Medicines";
+    Layout = "~/Views/Admin/Admin_Layout.cshtml";
+}
+
+<h3 class="text-dark mb-0" style="padding-top: 20px;">Medicines</h3>
+
+<div class="table-responsive">
+    <table class="table table-striped" id="usersTable">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>PWD No.</th>
+                <th>View Purchases</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ViewBag.Users != null)
+            {
+                int index = 1;
+                foreach (var user in ViewBag.Users)
+                {
+                    <tr>
+                        <td>@index</td>
+                        <td>@user.Name</td>
+                        <td>@user.PwdNo</td>
+                        <td>
+                            <button class="btn btn-outline-primary btn-sm view-purchases-btn"
+                                    type="button"
+                                    data-account-id="@user.AccountId"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#viewPurchased">
+                                View Purchases
+                            </button>
+                        </td>
+                    </tr>
+                    index++;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- View Purchased Modal -->
+<div class="modal fade" id="viewPurchased" tabindex="-1" aria-labelledby="viewPurchasedLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#0B2271">
+                <h5 class="modal-title" style="color:white">Purchases</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Table for Purchases History -->
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Medicine Name</th>
+                                <th>Prescribed Quantity</th>
+                                <th>Remaining Balance</th>
+                                <th>Price</th>
+                                @*  <th>Total Price</th> *@
+                                <th>Discounted Price (-20%)</th>
+                                <th>Date Purchased</th>
+                                <th>Attending Physician</th>
+                                <th>PTR No.</th>
+                                <th>Establishment Name</th>
+                                <th>Branch</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsTableBody">
+                            <!-- Transactions will be dynamically injected here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const viewButtons = document.querySelectorAll(".view-purchases-btn");
+        const transactionsTableBody = document.getElementById("transactionsTableBody");
+
+        viewButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const accountId = this.getAttribute("data-account-id");
+
+                // Ensure table is cleared before loading new data
+                transactionsTableBody.innerHTML = "";
+
+                console.log("Fetching transactions for AccountId:", accountId);
+
+                // AJAX fetch request with corrected URL
+                fetch(`/Admin/GetMedicineTransactions?accountId=${accountId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            // Log HTTP errors
+                            console.error(`HTTP Error: ${response.status} ${response.statusText}`);
+                            throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Log the fetched data to ensure correct mapping
+                        console.log("Fetched data:", data);
+
+                        if (data && data.length > 0) {
+                            let index = 1;
+                            data.forEach(transaction => {
+                                // Log each individual transaction to see what's being populated
+                                console.log("Transaction:", transaction);
+                                // Handle Date Parsing
+                                const date = new Date(transaction.datePurchased);
+                                const formattedDate = isNaN(date) ? "Invalid Date" : date.toLocaleDateString();
+
+
+                                // Correctly map data to table cells
+                                const row = `
+                                        <tr>
+                                            <td>${index}</td>
+                                            <td>${transaction.medicineName || "N/A"}</td>
+                                            <td>${transaction.prescribedQuantity || 0}</td>
+                                            <td>${transaction.remainingBalance || 0}</td>
+                                            <td>₱${(transaction.totalPrice ?? 0).toFixed(2)}</td>
+                                            <td>₱${(transaction.discountedPrice ?? 0).toFixed(2)}</td>
+                                            <td>${formattedDate}</td>
+                                            <td>${transaction.attendingPhysician || "N/A"}</td>
+                                            <td>${transaction.ptrNo || "N/A"}</td>
+                                            <td>${transaction.establishmentName || "N/A"}</td>
+                                            <td>${transaction.branch || "N/A"}</td>
+                                        </tr>
+                                    `;
+
+                                // Insert the row into the table
+                                transactionsTableBody.insertAdjacentHTML("beforeend", row);
+                                index++;
+                            });
+                        } else {
+                            console.warn("No transactions found for AccountId:", accountId);
+                            transactionsTableBody.innerHTML = `
+                                    <tr>
+                                        <td colspan="11" class="text-center">No transactions found.</td>
+                                    </tr>`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching transactions:", error);
+                        transactionsTableBody.innerHTML = `
+                                    <tr>
+                                        <td colspan="11" class="text-center text-danger">Failed to load transactions. Please try again.</td>
+                                    </tr>`;
+                    });
+            });
+        });
+    });
+</script>

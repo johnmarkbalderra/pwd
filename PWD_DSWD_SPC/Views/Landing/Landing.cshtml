@@ -1,0 +1,261 @@
+﻿@{
+    ViewBag.Title = "Landing";
+    Layout = "~/Views/Landing/Landing_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        /* Inline styles for responsiveness */
+        .carousel {
+            position: relative;
+            width: 100%;
+            margin: 0 auto;
+            max-width: 600px; /* Prevent overly wide appearance on larger screens */
+        }
+
+        .carousel-inner {
+            padding-top: 105px;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: auto;
+        }
+
+        .banner {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+            margin: 0 auto;
+            max-width: 1200px;
+            width: 90%;
+        }
+
+        .banner img {
+                opacity: 0.5;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+        }
+
+        .services .icon-box {
+            padding: 60px 30px;
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 2px 0 35px 0 rgba(68, 88, 144, 0.12);
+            transition: all 0.3s ease-in-out;
+            border-radius: 8px;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .services .icon-box::before {
+            content: '';
+            position: absolute;
+            background: #f1f1f1;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            top: 100%;
+            transition: all 0.4s;
+            z-index: -1;
+        }
+
+        .services .icon-box:hover::before {
+            background: #1b5ab8;
+            top: 0;
+            border-radius: 0px;
+        }
+
+        .services .icon {
+            margin-bottom: 15px;
+        }
+
+        .services .icon i {
+            font-size: 48px;
+            line-height: 1;
+            color: #0b2271;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .services .title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .services .title a {
+            color: #ffffff;
+        }
+
+        .services .description {
+            font-size: 15px;
+            line-height: 28px;
+            margin-bottom: 0;
+        }
+
+        .services .icon-box:hover .title a,
+        .services .icon-box:hover .description {
+            color: #ffffff;
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <!-- Carousel Section -->
+    <div class="carousel slide" data-bs-ride="carousel" data-bs-interval="2800" id="carousel-1" style="margin-top: 40px;">
+        <div class="carousel-inner" style="padding-top: 105px;">
+            <div class="carousel-item active"><img class="w-100 d-block" src="~/assets/img/slide.jpg" alt="Slide Image"></div>
+            <div class="carousel-item"><img class="w-100 d-block" src="~/assets/img/slide2.jpg" alt="Slide Image"></div>
+             <div class="carousel-item"><img class="w-100 d-block" src="~/assets/img/slide3.1.jpg" alt="Slide Image"></div>
+            <div class="carousel-item"><img class="w-100 d-block" src="~/assets/img/slide4.1.jpg" alt="Slide Image"></div>
+            <div class="carousel-item"><img class="w-100 d-block" src="~/assets/img/benefits.jpg" alt="Slide Image"></div>
+            <div class="carousel-item"><img class="w-100 d-block" src="~/assets/img/benefits1.1.jpg" alt="Slide Image"></div>
+            <div class="carousel-item"><img class="w-100 d-block" src="~/assets/img/benefits1.2.jpg" alt="Slide Image"></div>
+            <div class="carousel-item"><img class="w-100 d-block" src="~/assets/img/slide.png" alt="Slide Image"></div>
+            <div class="carousel-item"><img class="w-100 d-block" src="~/assets/img/slide2.png" alt="Slide Image"></div>
+            <div class="carousel-item"><img class="w-100 d-block" src="~/assets/img/slide4.jpg" alt="Slide Image"></div>
+            <div class="carousel-item"><img class="w-100 d-block" src="~/assets/img/slide3.jpg" alt="Slide Image"></div>
+        </div>
+        <div>
+            <a class="carousel-control-prev" href="#carousel-1" role="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+                <span class="visually-hidden">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carousel-1" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+                <span class="visually-hidden">Next</span>
+            </a>
+        </div>
+        <ol class="carousel-indicators">
+             <li data-bs-target="#carousel-1" data-bs-slide-to="0" class="active"></li>
+            <li data-bs-target="#carousel-1" data-bs-slide-to="1"></li>
+            <li data-bs-target="#carousel-1" data-bs-slide-to="2"></li>
+            <li data-bs-target="#carousel-1" data-bs-slide-to="3"></li>
+            <li data-bs-target="#carousel-1" data-bs-slide-to="4"></li>
+            <li data-bs-target="#carousel-1" data-bs-slide-to="5"></li>
+            <li data-bs-target="#carousel-1" data-bs-slide-to="6"></li>
+            <li data-bs-target="#carousel-1" data-bs-slide-to="7"></li>
+            <li data-bs-target="#carousel-1" data-bs-slide-to="8"></li>
+            <li data-bs-target="#carousel-1" data-bs-slide-to="9"></li>
+            <li data-bs-target="#carousel-1" data-bs-slide-to="10"></li>
+        </ol>
+    </div>
+
+    <!-- Main Content Section -->
+    <div class="row g-0 text-center" style="margin-top: 25px;margin-bottom: 40px;">
+        <div class="col">
+            <div class="d-inline-flex d-xl-flex flex-column justify-content-xl-center align-items-xl-center">
+                <h1 class="fw-bolder" style="font-size: 95px;">30,742</h1>
+                <h6 class="fw-bolder" style="color: rgb(11,34,113);">TOTAL REGISTERED PERSONS WITH DISABILITIES (IN SAN PABLO CITY)</h6>
+            </div>
+        </div>
+        <div class="col text-center">
+            <div class="d-flex flex-column align-items-center">
+                <p class="mb-3">
+                    To register, click on the "Register Now" button below to get started.
+                </p>
+                <button class="btn btn-primary btn-lg fw-bolder mb-3"
+                        type="button"
+                        style="background: rgb(11,34,113); font-size: 1.5rem; border-radius: 0; width: 100%; max-width: 400px;"
+                        data-bs-toggle="modal"
+                        data-bs-target="#requirements">
+                    Register Now
+                </button>
+
+                <button class="btn btn-primary btn-lg fw-bolder"
+                        type="button"
+                        style="background: rgb(11,34,113); font-size: 1.25rem; border-radius: 0; height: auto; width: 100%; max-width: 400px;">
+                    <a href="@Url.Action("Login", "Landing")"
+                       style="color: rgb(255,255,255); text-decoration: none;">
+                        Already have an Account?
+                    </a>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Banner Section -->
+    <div class="banner">
+        <img class="w-100 d-block" src="~/banir.jpg">
+        <div class="banner-content"></div>
+    </div>
+
+    <!-- About Us Section -->
+    <section class="services">
+        <div id="aboutus" class="container-md section-title">
+            <div class="text-center">
+                <h1 class="fw-bolder" style="color: rgb(11,34,113);margin-bottom: 20px;">About Us</h1>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-xl-4 text-center col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                    <div class="text-center icon-box">
+                        <div class="icon">
+                            <i class="fas fa-users"></i>
+                            <h4 class="title">Mission</h4>
+                            <p class="description">To lead in the formulation, implementation, and coordination of social welfare and development policies and programs for and with the poor, vulnerable and disadvantaged.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- More about us content -->
+
+                <div class="col-12 col-xl-4 text-center col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                    <div class="text-center icon-box">
+                        <div class="icon">
+                            <i class="fas fa-balance-scale"></i>
+                            <h4 class="title"><strong>Program for Persons with Disability (PWDs)</strong></h4>
+                            <p class="description">The Comprehensive Program for Persons with Disabilities aims to promote services to all types of PWDs 0-59 years of age and are members of the Self-Help Groups of PWDs. The program focuses on areas of disability prevention, rehabilitation and equalization of opportunities. Moreover, it is intended to enhance PWDs capacity to attain a more meaningful, productive and satisfying way of life and ultimately become self-reliant, productive and contributing members of society.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-xl-4 text-center col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                    <div class="text-center icon-box">
+                        <div class="icon">
+                            <i class="far fa-eye"></i>
+                            <h4 class="title">Vision</h4>
+                            <p class="description">The Department of Social Welfare and Development envisions all Filipinos free from hunger and poverty, have equal access to opportunities, enabled by a fair, just, and peaceful society.</p>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <!--REQ MODAL-->
+    <div class="modal fade" id="requirements" tabindex="-1" role="dialog" aria-labelledby="requirementsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fw-bolder" style="color: rgb(11,34,113);">REQUIREMENTS:</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="fw-light text-black-50">Completion of the Requirements. Complete and/or make available the following requirements</p>
+                    <h4 style="color: #0B2271;margin-bottom: 40px;">1. Two "1x1" recent ID pictures with the names, and signature or thumb marks at the back of the picture.</h4>
+                    <h4 style="color: #0B2271;margin-bottom: 40px;">2. One (1) valid government ID, such as a voter's ID, professional license, or barangay clearance.</h4>
+                    <h4 style="color: #0B2271;">3. Proof that you have a disability. This could be a medical certificate, or disability certificate.</h4>
+                    <h4 style="color: #0B2271;">4. Proof that you have a disability. This could be a medical certificate, or disability certificate.</h4>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                    <a role="button" class="btn btn-success" href="@Url.Action("Registration","Landing")">Register Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

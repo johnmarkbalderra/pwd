@@ -1,0 +1,128 @@
+﻿@{
+    ViewBag.Title = "Add Admin Account";
+    Layout = "~/Views/Admin/Admin_Layout.cshtml";
+}
+<head>
+    <!-- Add SweetAlert2 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
+</head>
+
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: '@ViewBag.ErrorMessage',
+        });
+    </script>
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+{
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: '@ViewBag.SuccessMessage',
+        });
+    </script>
+}
+
+<!-- Center the card on the page, avoiding scroll -->
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="card shadow-lg" style="width: 100%; max-width: 600px; height: 450px;">
+        <div class="card-header" style="background-color: #0E2C95; color: white;">
+            <h4 class="card-title mb-0">Add Admin Account</h4>
+        </div>
+        <div class="card-body d-flex flex-column justify-content-center align-items-center">
+            <form asp-action="AddAccount" method="post" id="adminAccountForm">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required />
+                    <small id="usernameHelp" class="form-text text-muted">Your username must be unique and contain only letters and numbers.</small>
+                    <div id="usernameError" class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required minlength="8" />
+                    <small id="passwordHelp" class="form-text text-muted">Password must be at least 8 characters long and contain at least one uppercase letter and one special character.</small>
+                    <div id="passwordError" class="invalid-feedback"></div>
+                </div>
+
+                <!-- Center the submit button -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-outline-primary mt-3" id="submitButton">Add Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById("adminAccountForm").addEventListener("submit", function (event) {
+            let formIsValid = true;
+            // Clear previous errors
+            document.getElementById("usernameError").textContent = "";
+            document.getElementById("passwordError").textContent = "";
+
+            // Validate username
+            const username = document.getElementById("username").value;
+            const usernameRegex = /^[a-zA-Z0-9]+$/;
+            if (!usernameRegex.test(username)) {
+                formIsValid = false;
+                document.getElementById("usernameError").textContent = "Username can only contain letters and numbers.";
+                document.getElementById("username").classList.add("is-invalid");
+            } else {
+                document.getElementById("username").classList.remove("is-invalid");
+            }
+
+            // Validate password
+            const password = document.getElementById("password").value;
+            const passwordRegex = /^(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+            if (!passwordRegex.test(password)) {
+                formIsValid = false;
+                document.getElementById("passwordError").textContent = "Password must be at least 8 characters long, with at least one uppercase letter and one special character.";
+                document.getElementById("password").classList.add("is-invalid");
+            } else {
+                document.getElementById("password").classList.remove("is-invalid");
+            }
+
+            if (!formIsValid) {
+                event.preventDefault(); // Prevent form submission if validation fails
+            }
+        });
+
+        // Real-time feedback for username
+        document.getElementById("username").addEventListener("input", function () {
+            const username = this.value;
+            const usernameRegex = /^[a-zA-Z0-9]+$/;
+            if (!usernameRegex.test(username)) {
+                document.getElementById("usernameError").textContent = "Username can only contain letters and numbers.";
+                this.classList.add("is-invalid");
+            } else {
+                document.getElementById("usernameError").textContent = "";
+                this.classList.remove("is-invalid");
+            }
+        });
+
+        // Real-time feedback for password
+        document.getElementById("password").addEventListener("input", function () {
+            const password = this.value;
+            const passwordRegex = /^(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+            if (!passwordRegex.test(password)) {
+                document.getElementById("passwordError").textContent = "Password must contain at least one uppercase letter and one special character.";
+                this.classList.add("is-invalid");
+            } else {
+                document.getElementById("passwordError").textContent = "";
+                this.classList.remove("is-invalid");
+            }
+        });
+    </script>
+}

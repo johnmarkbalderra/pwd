@@ -1,0 +1,262 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>PWD</title>
+    <link rel="stylesheet" href="~/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cookie">
+    <link rel="stylesheet" href="~/assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="~/assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="~/assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="~/assets/css/animated-services.css"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightpick@1.3.4/css/lightpick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="~/assets/css/Login-with-overlay-image.css">
+    <link rel="stylesheet" href="~/assets/css/Pretty-Footer-.css">
+    <link rel="stylesheet" href="~/assets/css/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .responsive-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap; /* Allows wrapping for small screens */
+        padding: 10px;
+        gap: 10px; /* Adds space between items */
+        }
+
+        .responsive-header img {
+            max-width: 100%; /* Ensures image scales down */
+            height: auto; /* Maintains aspect ratio */
+        }
+
+        .responsive-header div {
+            text-align: center; /* Center text for smaller screens */
+        }
+
+    </style>
+</head>
+
+
+<body>
+    <!--start header (nav bar)-->
+    <nav class="navbar navbar-dark navbar-expand-lg fixed-top" style="background: #0b2271;">
+        <div class="container">
+            <div class="d-flex flex-column flex-lg-row responsive-header">
+                <a href="@Url.Action("Landing", "Landing")" class="d-flex align-items-center" style="text-decoration: none;">
+                    <img src="~/doh.png" alt="Logo" style="height: 40px; margin-right: 10px;">
+                    <div style="color:white">
+                        <p class="text-start" style="font-size: 13px; margin: 0;">Republic of the Philippines</p>
+                        <h3 class="fw-semibold text-start">DEPARTMENT OF HEALTH</h3>
+                        <p class="text-start" style="font-size: 11px; margin: 0;">Persons with Disability (PWD)</p>
+                    </div>
+                </a>
+            </div>
+
+
+            <button data-bs-toggle="collapse" class="navbar-toggler ms-auto" data-bs-target="#navcol-1">
+                <span class="visually-hidden">Toggle navigation</span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="@Url.Action("Landing","Landing")">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-target="#requirements" data-bs-toggle="modal">Register Now</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-target="#trackApplicationModal" data-bs-toggle="modal">Track Application</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Login","Landing")">Already have an Account?</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#aboutus">About Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!--end header (nav bar)-->
+
+    <!--REQ MODAL-->
+    <div class="modal fade" role="dialog" tabindex="-1" id="requirements">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fw-bolder" style="color: rgb(11,34,113);">REQUIREMENTS:</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="fw-light text-black-50">Completion of the Requirements. Complete and/or make available the following requirements</p>
+                    <h4 style="color: #0B2271;margin-bottom: 40px;">1. Three "1x1" recent ID pictures with the names, and signature or thumb marks at the back of the picture.</h4>
+                    <h4 style="color: #0B2271;margin-bottom: 40px;">2. One (1) valid government ID, such as a voter's ID, professional license.</h4>
+                    <h4 style="color: #0B2271;margin-bottom: 40px;">3. Barangay certificate of residency. </h4>
+                    <h4 style="color: #0B2271;">4. Proof that you have a disability. This could be a medical certificate, or disability certificate.</h4>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                    <a role="button" class="btn btn-success" href="@Url.Action("Add","Register")">Register Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Track Application Modal -->
+    <div class="modal fade" id="trackApplicationModal" tabindex="-1" role="dialog" aria-labelledby="trackApplicationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="trackApplicationModalLabel" style=" color: rgb(11,34,113);">Track Your Application</h3>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="trackForm">
+                        <div class="form-group">
+                            <label for="referenceNumber">Enter Reference Number</label>
+                            <input type="text" class="form-control" id="referenceNumber" placeholder="Enter Reference Number">
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" id="trackApplication" class="form-control btn btn-primary mt-2" style="background-color:#0B2271; color:white">Track</button>
+                        </div>
+                    </form>
+
+                    <hr>
+
+                    <!-- HTML Structure -->
+                    <div class="justify-content-center align-items-center" id="statusResult" style="display: none;">
+                        <p><strong>Three "1x1" recent ID pictures:</strong> <span id="req1Status">Pending</span></p>
+                        <p><strong>One (1) valid Government ID:</strong> <span id="req2Status">Pending</span></p>
+                        <p><strong>Barangay Residency:</strong> <span id="req3Status">Pending</span></p>
+                        <p><strong>Medical Certificate/Disability Certificate:</strong> <span id="req4Status">Pending</span></p>
+                        <p><strong>Overall Status:</strong> <span id="overallStatus">Pending</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            // Function to start tracking for application status
+            function trackApplication(referenceNumber) {
+                $.ajax({
+                    type: "POST",
+                    url: '/Landing/TrackApplication',
+                    data: { referenceNumber: referenceNumber },
+                    success: function (response) {
+                        if (response.success) {
+                            // Debugging: log the response to the console
+                            console.log("Response:", response);
+
+                            // Update the modal with the real-time status of requirements
+                            $('#req1Status').text(response.approvalStatus.requirement1);
+                            $('#req2Status').text(response.approvalStatus.requirement2);
+                            $('#req3Status').text(response.approvalStatus.requirement3);
+                            $('#req4Status').text(response.approvalStatus.requirement4);
+                            $('#overallStatus').text(response.approvalStatus.status);
+
+                            // Display the status section
+                            $('#statusResult').show();
+
+                            // Stop polling if status is 'Approved'
+                            if (response.approvalStatus.status === 'Approved') {
+                                clearInterval(pollingInterval);
+                            }
+                        } else {
+                            alert(response.message); // Display error if application is not found
+                        }
+                    },
+                    error: function () {
+                        alert('Error fetching application status. Please try again later.');
+                    }
+                });
+            }
+
+            // Trigger tracking when the user clicks the Track button
+            $('#trackApplication').click(function () {
+                var referenceNumber = $('#referenceNumber').val();
+
+                // Validate the input first (check if reference number is provided)
+                if (!referenceNumber) {
+                    alert('Please enter a reference number.');
+                    return;
+                }
+
+                // Show the status result section before starting polling
+                $('#statusResult').hide();
+                $('#trackApplicationModal').modal('show');
+
+                // Start tracking the application status
+                trackApplication(referenceNumber);
+            });
+        });
+
+
+    </script>
+
+
+  
+
+    <div>
+        @RenderBody()
+    </div>
+
+    <!--start footer-->
+    <footer style="background: rgb(11,34,113);font-family: apple-system,system-ui,BlinkMacSystemFont,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,Arial,sans-serif;">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-6 col-md-4 col-xxl-6 footer-navigation">
+                <div style="display: flex; align-items: center;">
+                    <a href="@Url.Action("Landing","Landing")" style="font-family: apple-system,system-ui,BlinkMacSystemFont,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,Arial,sans-serif;">
+                    <img src="~/doh.png" alt="Logo" style="height: 40px; margin-right: 10px;">
+                    <h3 style="margin: 0; font-size:25px">
+                            <p style="font-size: 13px;margin: 0px;">Republic of the Philippines</p>
+                            <strong>DEPARTMENT OF HEALTH</strong>
+                            <p style="font-size: 11px;margin: 0px;">Persons with Disability (PWD)&nbsp;</p>
+                        </a>
+                    </h3>
+                </div>
+
+                <p class="links" style="font-size: 14px; margin-top:30px">
+                    <a href="@Url.Action("Landing","Landing")">Home</a><strong> · </strong><a href="#" data-bs-target="#requirements" data-bs-toggle="modal">Register Now</a><strong> · </strong><a href="#" data-bs-target="#trackApplicationModal" data-bs-toggle="modal">Track Application</a><strong> · </strong><a href="@Url.Action("Login","Landing")">Already have an Account?</a><strong> · </strong><a href="#aboutus">About Us</a><strong>&nbsp;</strong>
+                </p>
+                <p class="company-name">DOH © 2024</p>
+            </div>
+            <div class="col-sm-6 col-md-4 footer-contacts" style="width: 295.656px;">
+                <div>
+                    <span class="fa fa-map-marker footer-contacts-icon"> </span>
+                    <p><span class="new-line-span">38FF+RR9, San Pablo City, Laguna</span>Laguna, Philippines</p>
+                </div>
+                <div>
+                    <i class="fa fa-phone footer-contacts-icon"></i>
+                    <p class="footer-center-info email text-start"> +1 555 123456</p>
+                </div>
+                <div>
+                    <i class="fa fa-envelope footer-contacts-icon"></i>
+                    <p>dswdpwdspc@gmail.com</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!--end footer-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightpick@1.3.4/lightpick.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>

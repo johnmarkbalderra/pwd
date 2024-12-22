@@ -1,0 +1,469 @@
+﻿
+@{
+    ViewData["Title"] = "Commodities Booklet";
+    Layout = "~/Views/User/User_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+</head>
+
+<body>
+
+    <!-- ========================= Main (CONTENT) ==================== -->
+    <div class="main">
+        <div class="topbar">
+            <div class="toggle">
+                <ion-icon name="menu-outline"></ion-icon>
+            </div>
+
+            <!-- user profile -->
+            <div class="user">
+                <a href="@Url.Action("AccountSetting", "User")">
+                    <ion-icon name="person-outline" style="color: #0b2271;"></ion-icon>
+                </a>
+            </div>
+        </div>
+
+        <div class="pt-5 pb-5" style="font-size: clamp(9px, 2vw, 13px); border-radius: 20px; background-color: #fff; color: #0b2271; margin-left: 10px; margin-right: 10px; padding-left: 20px; padding-right: 20px; box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);">
+            <!--Header w/btn-->
+            <div class="d-flex justify-content-between align-items-center">
+                <h3>Commodities</h3>
+
+                <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#commo-form" style="color: #fff; background-color: #0b2271;">
+                    Select an Item
+                </button>
+            </div>
+            <div>
+                @if (ViewBag.Establishment != null && ViewBag.Branch != null)
+                {
+                    <p><strong>Establishment:</strong> @ViewBag.Establishment</p>
+                    <p><strong>Branch:</strong> @ViewBag.Branch</p>
+                    <p><strong>Date:</strong> @TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Singapore Standard Time")).ToString("MMMM dd, yyyy h:mm tt")</p>
+                }
+                else
+                {
+                    <p>No establishment or branch information available.</p>
+                }
+            </div>
+
+            <div class="table-responsive">
+                <table class="table" id="commodityTable">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Quantity</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Total Price</th>
+                            <th>-5%</th>
+                            <th>Action</th> 
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Items will be inserted here dynamically -->
+                    </tbody>
+                </table>
+
+                <!-- Summary section -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6>Total Amount: ₱<span id="totalAmount">0.00</span></h6>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6>Exceed Amount: ₱<span id="exceedAmount">0.00</span></h6>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6>Remaining Weekly Discount: <span id="remainingDiscount">2500</span></h6>
+                </div>
+            </div>
+
+            <!-- Signature Content -->
+            <div class="signature-section" style="display: none;">
+                <div class="text-center mt-4">
+                    <span>E-Signature to Complete the transaction</span>
+                    <div class="d-flex justify-content-center">
+                        <canvas class="signature-pad" style="border:1px solid black; width: 100%; max-width: 400px; height: 200px;"></canvas>
+                    </div>
+                    <!--acknowledgement content-->
+                    <div class="form-check mt-3">
+                        
+                        <label class="form-check-label" for="acknowledgeCheckbox">
+                            <input type="checkbox" class="form-check-input" id="acknowledgeCheckbox">
+                            I hereby certify that the correct discount has been given for this transaction.
+                        </label>
+                    </div>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-success submit" disabled>Submit</button>
+                        <button class="btn btn-warning clear-signature">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL SELECTING ITEMS -->
+        <div class="modal fade" id="commo-form" tabindex="-1" aria-labelledby="commo-form" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header text-white" style="background-color:#0B2271">
+                        <h5 class="modal-title">Select an Item</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                            <!-- Dynamic product selection with checkboxes -->
+                            <div class="form-check">
+                                <input class="form-check-input toggleable-checkbox" type="checkbox" name="product" value="Rice|kg">
+                                <label class="form-check-label">Rice (kg)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input toggleable-checkbox" type="checkbox" name="product" value="Corn|item">
+                                <label class="form-check-label">Corn (item)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input toggleable-checkbox" type="checkbox" name="product" value="Fresh, dried and canned fish and other marine products|kg">
+                                <label class="form-check-label">Fresh, dried and canned fish and other marine products (kg)</label>
+                            </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Fresh pork, beef, poultry meat|kg">
+                            <label class="form-check-label" for="Fresh pork, beef, poultry meat"> Fresh pork, beef, poultry meat</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Fresh eggs|item">
+                            <label class="form-check-label" for="Fresh eggs"> Fresh eggs </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Fresh and process milk|item">
+                            <label class="form-check-label" for="Fresh and process milk"> Fresh and process milk </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Fresh vegetables|kg">
+                            <label class="form-check-label" for="Fresh vegetables"> Fresh vegetables </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Root crops|kg">
+                            <label class="form-check-label" for="Root crops"> Root crops </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Coffee|item">
+                            <label class="form-check-label" for="Coffee"> Coffee </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Sugar|kg">
+                            <label class="form-check-label" for="Sugar"> Sugar </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Cooking Oil|item">
+                            <label class="form-check-label" for="Cooking Oil"> Cooking Oil </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Salt|kg">
+                            <label class="form-check-label" for="Salt"> Salt </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Laundry soap & detergent|item">
+                            <label class="form-check-label" for="Laundry soap & detergent"> Laundry soap & detergent </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Firewood|kg">
+                            <label class="form-check-label" for="Firewood"> Firewood </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Charcoal|kg">
+                            <label class="form-check-label" for="Charcoal"> Charcoal </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Candles|item">
+                            <label class="form-check-label" for="Candles"> Candles </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Fresh fruits|kg">
+                            <label class="form-check-label" for="Fresh fruits"> Fresh fruits </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Flour|kg">
+                            <label class="form-check-label" for="Flour"> Flour </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Dried, processed and canned|item">
+                            <label class="form-check-label" for="Dried, processed and canned"> Dried, processed and canned </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Dairy products|item">
+                            <label class="form-check-label" for="Dairy products"> Dairy products </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Noodles|item">
+                            <label class="form-check-label" for="Noodles"> Noodles </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Onions|kg">
+                            <label class="form-check-label" for="Onions"> Onions </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Garlics|kg">
+                            <label class="form-check-label" for="Garlics"> Garlics </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Herbices, poultry, swine and cattle feeds|item">
+                            <label class="form-check-label" for="Herbices, poultry, swine and cattle feeds"> Herbices, poultry, swine and cattle feeds </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Veterinary products for poultry, swine and cattle|item">
+                            <label class="form-check-label" for="Veterinary products for poultry, swine and cattle"> Veterinary products for poultry, swine and cattle</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Paper, school supplies|item">
+                            <label class="form-check-label" for="Paper, school supplies"> Paper, school supplies </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Nipa shingle|item">
+                            <label class="form-check-label" for="Nipa shingle"> Nipa shingle</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Plyboard|item">
+                            <label class="form-check-label" for="Plyboard"> Plyboard</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Contruction nails|item">
+                            <label class="form-check-label" for="Contruction nails"> Contruction nails</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Batteries|item">
+                            <label class="form-check-label" for="Batteries"> Batteries</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Electric supplies|item">
+                            <label class="form-check-label" for="Electric supplies"> Electric supplies</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Lightbulb|item">
+                            <label class="form-check-label" for="Lightbulb"> Lightbulb</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Steel wire|kg">
+                            <label class="form-check-label" for="Steel wire"> Steel wire</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Infant formula|item">
+                            <label class="form-check-label" for="Infant formula"> Infant formula</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input toggleable-checkbox" type="checkbox" value="Diapers|item">
+                            <label class="form-check-label" for="Diapers"> Diapers</label>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn add-items" style="background-color: #0b2271; color: white;" data-bs-dismiss="modal">Add Item/s</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!--SweetAlert-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            // Define remainingDiscount globally to store the value across different functions
+            let remainingDiscount = 0;
+
+            // Fetch AccountId from ViewBag or wherever it's passed from the server-side
+            const accountId = "@ViewBag.AccountId";
+
+            // Check if accountId is available before making the AJAX request
+            if (!accountId || accountId === "undefined") {
+                console.error("AccountId is not available.");
+                return;
+            }
+
+            console.log("AccountId: ", accountId); // Log AccountId for debugging
+
+            // AJAX call to fetch the remaining balance for the specific AccountId
+            $.ajax({
+                url: `/User/GetRemainingBalance?accountId=${accountId}`,
+                method: 'GET',
+                success: function (response) {
+                    console.log("Server response: ", response); // Log the entire response
+
+                    if (response && response.remainingBalance !== undefined) {
+                        remainingDiscount = parseFloat(response.remainingBalance);
+                        if (!isNaN(remainingDiscount)) {
+                            console.log('Remaining Discount: ', remainingDiscount);
+                            if (remainingDiscount === 2500) {
+                                console.log('Discount has been reset to 2500 for the new week.');
+                            }
+                        } else {
+                            remainingDiscount = 0;
+                            console.error("Invalid remaining balance received.");
+                        }
+                    } else {
+                        remainingDiscount = 0;
+                        console.error("Remaining balance is not available.");
+                    }
+                    updateTotalAmount(); // Update total amount with the correct remaining balance
+                },
+                error: function (xhr) {
+                    remainingDiscount = 0;
+                    console.error("Error fetching remaining balance: ", xhr.responseText);
+                    updateTotalAmount();
+                }
+            });
+
+            // Event listener for Add Items button
+            $(document).on('click', '.add-items', function () {
+                // Get the selected items
+                $('.toggleable-checkbox:checked').each(function () {
+                    const value = $(this).val().split('|'); // Split value by '|'
+                    const description = value[0]; // Get description
+                    const unit = value[1]; // Get unit
+
+                    // Create a new row in the table using template literals for cleaner HTML
+                    const newRow = `
+                                <tr>
+                                    <td>${$('#commodityTable tbody tr').length + 1}</td>
+                                    <td><input type="number" class="quantity" value="1" min="1"></td>
+                                    <td class="description">${description} (${unit})</td>
+                                    <td><input type="number" class="price" value="1" step="0.01" min="0"></td>
+                                    <td class="total-price">0.00</td>
+                                    <td class="discount-price">0.00</td>
+                                    <td><button class="btn btn-danger remove-item">Remove</button></td>
+                                </tr>
+                            `;
+                    $('#commodityTable tbody').append(newRow); // Append the new row to the table
+                });
+
+                // Show signature section when items are added
+                $('.signature-section').show();
+                $('.toggleable-checkbox').prop('checked', false); // Clear checkboxes
+                updateTotalAmount();
+            });
+
+            // Event listener for Remove button
+            $(document).on('click', '.remove-item', function () {
+                $(this).closest('tr').remove();
+                updateTotalAmount();
+            });
+
+            // Event listener for changes in price or quantity inputs
+            $(document).on('input', '.price, .quantity', function () {
+                updateRowTotal($(this).closest('tr'));
+                updateTotalAmount();
+            });
+
+            // Function to update total price and discount for a specific row
+            function updateRowTotal(row) {
+                const qty = parseFloat(row.find('.quantity').val()) || 0;
+                const price = parseFloat(row.find('.price').val()) || 0;
+                const totalPrice = qty * price;
+                const discountPrice = totalPrice * 0.95; // Apply 5% discount
+
+                row.find('.total-price').text(totalPrice.toFixed(2));
+                row.find('.discount-price').text(discountPrice.toFixed(2));
+            }
+
+            // Update total amounts in the table and remaining discount
+            function updateTotalAmount() {
+                let total = 0;
+
+                $('#commodityTable tbody tr').each(function () {
+                    const discountPrice = parseFloat($(this).find('.discount-price').text()) || 0;
+                    total += discountPrice; // Use discounted price
+                });
+
+                $('#totalAmount').text(total.toFixed(2));
+                $('#remainingDiscount').text(Math.max(0, remainingDiscount - total).toFixed(2));
+                $('#exceedAmount').text(Math.max(0, total - remainingDiscount).toFixed(2));
+            }
+
+            // Signature pad setup
+            let signaturePad = new SignaturePad(document.querySelector('.signature-pad'));
+
+            $('.clear-signature').on('click', function () {
+                signaturePad.clear();
+            });
+
+            // Enable submit button based on acknowledgment checkbox
+            $('#acknowledgeCheckbox').on('change', function () {
+                $('.submit').prop('disabled', !this.checked);
+            });
+
+            // Submit button handler
+            $('.submit').on('click', function () {
+                const items = [];
+                $('#commodityTable tbody tr').each(function () {
+                    items.push({
+                        Description: $(this).find('.description').text(),
+                        Quantity: parseInt($(this).find('.quantity').val()),
+                        Price: parseFloat($(this).find('.price').val())
+                    });
+                });
+
+                const totalAmount = parseFloat($('#totalAmount').text());
+                const remainingDiscount = parseFloat($('#remainingDiscount').text());
+                const exceedAmount = parseFloat($('#exceedAmount').text());
+                const signatureData = signaturePad.toDataURL();
+
+                const establishmentName = "@ViewBag.Establishment";
+                const branchName = "@ViewBag.Branch";
+
+                $.ajax({
+                    url: '/User/SubmitCommodities',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        items: items,
+                        totalAmount: totalAmount,
+                        remainingDiscount: remainingDiscount,
+                        exceedAmount: exceedAmount,
+                        signature: signatureData,
+                        establishmentName: establishmentName,
+                        branchName: branchName
+                    }),
+                    success: function (response) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: xhr.responseText,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+
+</body>
+
+</html>

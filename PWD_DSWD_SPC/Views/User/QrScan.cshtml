@@ -1,0 +1,175 @@
+﻿@{
+    ViewBag.Title = "QR Scan";
+    Layout = "~/Views/User/User_Layout.cshtml";
+}
+
+<!-- ========================= Main (CONTENT) ==================== -->
+<div class="main">
+    <div class="topbar">
+        <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+        </div>
+
+        @* User profile *@
+        <div class="user">
+            <a href="@Url.Action("AccountSetting", "User")">
+                <ion-icon name="person-outline" style="color: #0b2271;"></ion-icon>
+            </a>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <h3 class="text-center">Scan or Upload QR Code</h3>
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <!-- QR Code Scanner -->
+                <button id="start-scanner" class="btn btn-primary mb-3">Start QR Code Scanner</button>
+                <div id="qr-reader" style="width: 500px; display: none;"></div>
+                <div id="qr-reader-results" class="mt-3 text-danger"></div>
+
+                <!-- Upload QR Code -->
+                <h5 class="mt-5">Or Upload QR Code</h5>
+                <input type="file" id="qr-upload" accept="image/*" class="form-control mb-3" />
+                <button id="upload-qr" class="btn btn-secondary">Upload QR Code</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal for selecting Commodities or Medicine -->
+    <div class="modal fade" id="qrContentModal" tabindex="-1" role="dialog" aria-labelledby="qrContentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#0B2271">
+                    <h5 class="modal-title" id="qrContentModalLabel" style="color:white">Choose QR Content</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p id="modal-message">Please select the content you want to visit:</p>
+                    <div class="d-flex justify-content-center">
+                        <button id="commodities-url" class="btn btn-outline-secondary mx-2">Commodities</button>
+                        <button id="medicine-url" class="btn btn-outline-secondary mx-2">Medicine</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Code Scanning Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.7/html5-qrcode.min.js"></script>
+    <script type="module">
+        import QrScanner from "https://cdn.jsdelivr.net/npm/qr-scanner@1.4.0/qr-scanner.min.js";
+        window.QrScanner = QrScanner; // Make it globally available for inline script usage
+    </script>
+
+    <script>
+     
+        window.onload = function () {
+            // Initialize QR Code Scanner
+            document.getElementById('start-scanner').addEventListener('click', function () {
+                document.getElementById('qr-reader').style.display = "block";
+                let html5QrCode = new Html5Qrcode("qr-reader");
+
+                html5QrCode.start(
+                    { facingMode: "environment" },  // Use the rear camera if available
+                    {
+                        fps: 10,  // Frame rate for better detection speed
+                        qrbox: { width: 250, height: 250 }  // Size of scanning box
+                    },
+                    function onScanSuccess(qrCodeMessage) {
+                        // Stop scanning after a successful scan
+                        html5QrCode.stop().then(() => {
+                            console.log("QR Code scanning stopped.");
+                            processScannedQRCode(qrCodeMessage);
+                        }).catch(err => {
+                            console.error("Error stopping QR scanner: ", err);
+                        });
+                    },
+                    function onScanFailure(error) {
+                        // Print detailed error message in the console
+                        console.warn(`QR Code scan error: ${error}`);
+                        document.getElementById('qr-reader-results').innerText = "No QR code detected. Try again.";
+                    }
+                ).catch(err => {
+                    console.error("Unable to start QR code scanner: ", err);
+                });
+            });
+
+            // Upload QR Code
+            document.getElementById('upload-qr').addEventListener('click', function () {
+                const fileInput = document.getElementById('qr-upload');
+                const file = fileInput.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        const imageData = event.target.result;
+                        const img = new Image();
+                        img.onload = function () {
+                            QrScanner.scanImage(img, { returnDetailedScanResult: true })
+                                .then(result => {
+                                    processScannedQRCode(result.data);
+                                })
+                                .catch(err => {
+                                    alert("Error reading the QR code: " + err.message);
+                                });
+                        };
+                        img.src = imageData;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert("Please select an image file.");
+                }
+            });
+
+            // Function to handle scanned or uploaded QR code
+            function processScannedQRCode(qrCodeMessage) {
+                console.log("QR Code Scanned: ", qrCodeMessage); // Debugging log
+
+                try {
+                    // Check if the QR code contains a JSON object
+                    let qrContent = JSON.parse(qrCodeMessage);
+                    console.log("Parsed QR Content: ", qrContent);
+
+                    if (qrContent.CommoditiesUrl && qrContent.MedicineUrl) {
+                        // Show modal to select content
+                        document.getElementById('commodities-url').onclick = function () {
+                            window.location.href = qrContent.CommoditiesUrl;
+                        };
+                        document.getElementById('medicine-url').onclick = function () {
+                            window.location.href = qrContent.MedicineUrl;
+                        };
+
+                        // Populate modal fields with establishment and branch data
+                        document.getElementById('qrContentModalLabel').innerText = `QR Code for ${qrContent.Establishment} - ${qrContent.Branch}`;
+
+                        // Display modal
+                        $('#qrContentModal').modal('show');
+                    } else {
+                        console.log("Single URL or invalid QR content");
+                        // If it's not JSON, assume it's a single URL and redirect
+                        if (qrCodeMessage.startsWith("http")) {
+                            window.location.href = qrCodeMessage;
+                        } else {
+                            document.getElementById('qr-reader-results').innerText = `Invalid QR Code: ${qrCodeMessage}`;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error parsing QR code message: ", e);
+                    // If it's not JSON, assume it's a single URL and redirect
+                    if (qrCodeMessage.startsWith("http")) {
+                        window.location.href = qrCodeMessage;
+                    } else {
+                        document.getElementById('qr-reader-results').innerText = `Invalid QR Code: ${qrCodeMessage}`;
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</div>

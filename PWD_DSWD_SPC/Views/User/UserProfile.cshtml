@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/User/User_Layout.cshtml";
+}
+
+<!-- ========================= Main (CONTENT) ==================== -->
+<div class="main">
+    <div class="topbar">
+        <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+        </div>
+
+        <!-- User profile icon -->
+        <div class="user">
+            <a href="@Url.Action("AccountSetting", "User")">
+                <ion-icon name="person-outline" style="color: #0b2271;"></ion-icon>
+            </a>
+        </div>
+    </div>
+
+    <!-- Profile Content -->
+    <div class="d-flex justify-content-center align-items-center pt-5 pb-5" style="border-radius: 20px;background: #ffff;color: #0b2271; margin-left:40px; margin-right:40px; padding-left:40px; padding-right:40px; box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);">
+        <ion-icon name="person-circle-outline" class="justify-content-end" style="width:180px; height:180px"></ion-icon>
+        <div>
+            <span>Welcome back!</span>
+            <h1> Hi, @ViewBag.FullName! </h1>
+        </div>
+    </div>
+
+    <div class="pt-5 pb-5 mt-5" id="details-card">
+        <!-- Full Name -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span>Full Name:</span> @ViewBag.FullName
+        </div>
+        <!-- PWD No. -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span>PWD No.:</span> @ViewBag.PWDNo
+        </div>
+        <!-- Validity -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span>Validity:</span> @ViewBag.Validity
+        </div>
+        <!-- Type of Disability -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span>Type of Disability:</span> @ViewBag.DisabilityType
+        </div>
+        <!-- Contact No. -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span>Contact No.:</span> @ViewBag.ContactNo
+        </div>
+        <!-- Address -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span>Barangay:</span> @ViewBag.Address
+        </div>
+        <!-- Date of Birth -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span>Date of Birth:</span> @ViewBag.DateOfBirth
+        </div>
+        <!-- Sex -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span>Sex:</span> @ViewBag.Sex
+        </div>
+    </div>
+</div>

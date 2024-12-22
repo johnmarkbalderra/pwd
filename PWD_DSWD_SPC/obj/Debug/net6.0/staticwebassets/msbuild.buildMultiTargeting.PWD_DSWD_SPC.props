@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\PWD_DSWD_SPC.props" />
+</Project>

@@ -1,0 +1,463 @@
+﻿@model IEnumerable<PWD_DSWD_SPC.Models.Registered.Account>
+@{
+    ViewBag.Title = "Applicants";
+    Layout = "~/Views/Admin/Admin_Layout.cshtml";
+}
+
+<h3 class="text-dark mb-0" style="padding-top: 20px;">Applicants</h3>
+<div class="d-flex justify-content-end mb-3">
+    <input type="text" id="searchInput" class="form-control me-2" placeholder="Search..." style="width: 200px;" onkeyup="searchTable()">
+</div>
+<div class="table-responsive table-scrollable">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Full Name</th>
+                <th>Type of Applicant</th>
+                <th>Type of Disability</th>
+                <th>Reference No.</th>
+                <th>Status</th>
+                <th>Requirements</th>
+                <th>Details</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                int count = 1;
+                foreach (var account in Model)
+                {
+                    <tr>
+                        <td>@count</td>
+                        <td>@($"{account.LastName}, {account.FirstName}")</td>
+                        <td>@account.ApplicantType</td>
+                        <td>@account.TypeOfDisability</td>
+                        <td>@account.ReferenceNumber</td>
+                        <td>@account.Status.Status</td>
+                        <td>
+                            <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#requirement-@account.Id">Validation</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#ViewDetails-@account.Id" onclick="loadDetails('@Url.Action("Details", new { id = account.Id })')">View Details</button>
+                        </td>
+                        
+                        <td>
+                            <!-- Only show the approve button if the status is "Approved" -->
+                            @if (account.Status.Status == "Waiting" && !account.Status.IsApproved)
+                                {
+                                <button class="btn btn-outline-success" type="button" data-bs-toggle="modal" data-bs-target="#approveModal-@account.Id">Approve</button>
+                                }
+                                else
+                                {
+                                <span style="color:red">On Hold</span>
+                                }
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#disapproveModal-@account.Id">Disapprove</button>
+                        </td>
+                            
+                        
+                    </tr>
+                    count++;  <!-- Correct increment -->
+                    <!-- Approve Modal -->
+                    <div class="modal fade" id="approveModal-@account.Id" tabindex="-1" aria-labelledby="approveModalLabel-@account.Id" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                        <div class="modal-header text-white" style="background-color:#0B2271">
+                                    <h5 class="modal-title">Account Validity</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    @if (TempData["ErrorMessage"] != null)
+                                    {
+                                        <div class="alert alert-danger">
+                                            @TempData["ErrorMessage"]
+                                        </div>
+                                    }
+                                    <form id="approveAccountForm" asp-action="ApproveAccount" method="post">
+                                        <input type="hidden" name="accountId" value="@account.Id" />
+
+                                        @if (account.ApplicantType == "New Applicant")
+                                        {
+                                            <div class="form-group">
+                                                <label for="pwdNumber">Add a PWD Number:</label>
+                                                <input type="number" class="form-control" name="pwdNumber" placeholder="Automatic 5 years Validity" />
+                                            </div>
+                                        }
+                                        else if (account.ApplicantType == "Renewal")
+                                        {
+                                            <div class="form-group">
+                                                <label for="pwdNumber">PWD Number:</label>
+                                                <input type="text" class="form-control" name="pwdNumber" value="@account.DisabilityNumber" readonly />
+                                            </div>
+                                        }
+
+                                        <div class="d-flex justify-content-center">
+                                            <button type="submit" class="btn btn-primary mt-2">Approve</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Disapprove Confirmation Modal -->
+                    <div class="modal fade" id="disapproveModal-@account.Id" tabindex="-1" aria-labelledby="disapproveModalLabel-@account.Id" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                               <div class="modal-header text-white" style="background-color:#0B2271">
+                                    <h5 class="modal-title">Confirm Disapproval</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to disapprove this account?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <form asp-action="DisapproveAccount" method="post">
+                                        <input type="hidden" name="accountId" value="@account.Id" />
+                                        <button type="submit" class="btn btn-danger">Yes</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="12" class="text-center">No applicants found</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script src="~/ADMIN-ASSET/js/table-feature.js"></script>
+
+@section Scripts {
+    <script>
+
+        // new
+        function onApprove() {
+            var referenceNumber = $('#referenceNumber').val();
+            $.post('/Applicant/UpdateStatus', {
+                id: $('#applicationId').val(),
+                requirement1: $('#requirement1').is(':checked'),
+                requirement2: $('#requirement2').is(':checked'),
+                requirement3: $('#requirement3').is(':checked'),
+                requirement4: $('#requirement4').is(':checked')
+                
+            }).done(function (response) {
+                if (response.success) {
+                    $('#approveModal').modal('show');
+                } else {
+                    alert(response.message);
+                }
+            });
+        }
+
+        function confirmApproval() {
+            var accountId = $('#accountId').val();
+            var pwdNumber = $('#pwdNumber').val();
+
+            $.post('/Applicant/ApproveAccount', {
+                accountId: accountId,
+                pwdNumber: pwdNumber
+            }).done(function (response) {
+                if (response.success) {
+                    window.location.href = '/Admin/ListofAllAccounts';
+                } else {
+                    alert(response.message);
+                }
+            });
+        }
+
+        function confirmDisapproval() {
+            var accountId = $('#accountId').val();
+
+            $.post('/Applicant/DisapproveAccount', {
+                accountId: accountId
+            }).done(function (response) {
+                if (response.success) {
+                    window.location.href = '/Admin/ArchivedAccounts';
+                } else {
+                    alert(response.message);
+                }
+            });
+        }
+
+    </script>
+}
+
+   
+
+    <!-- VALIDATION MODAL -->
+    @foreach (var account in Model)
+    {
+        <div class="modal fade" role="dialog" tabindex="-1" id="requirement-@account.Id">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#0B2271">
+                        <h4 class="modal-title" style="color:white">Requirements</h4>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="/Applicant/UpdateStatus">
+                            <input type="hidden" name="id" value="@account.Id" />
+
+                            <!-- 1st requirement -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span>Three "1x1" recent ID pictures</span>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input"
+                                           id="requirement1-@account.Id"
+                                           name="requirement1"
+                                           value="true"
+                                    @(account.Status.Requirement1 ? "checked" : "") />
+                                </div>
+                            </div>
+
+                            <!-- 2nd requirement -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span>One (1) valid Government ID</span>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input"
+                                           id="requirement2-@account.Id"
+                                           name="requirement2"
+                                           value="true"
+                                    @(account.Status.Requirement2 ? "checked" : "") />
+                                </div>
+                            </div>
+
+                        <!-- 3rd requirement -->
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span>Barangay Clearance</span>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input"
+                                       id="requirement3-@account.Id"
+                                       name="requirement3"
+                                       value="true"
+                                @(account.Status.Requirement3 ? "checked" : "") />
+                            </div>
+                        </div>
+
+                            <!-- 4th requirement -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span>Medical Certificate/Disability Certificate</span>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input"
+                                           id="requirement4-@account.Id"
+                                           name="requirement4"
+                                           value="true"
+                                    @(account.Status.Requirement4 ? "checked" : "") />
+                                </div>
+                            </div>
+
+
+
+                            <!-- Submit button -->
+                             <div class="modal-footer justify-content-center">
+                                <button type="submit" class="btn btn-primary">Update Status</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- View Details Modal -->
+    @foreach (var account in Model)
+    {
+    <div class="modal fade" role="dialog" tabindex="-1" id="ViewDetails-@account.Id">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#0B2271">
+                        <h4 class="modal-title" style="color:white">Full Details</h4>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        @* type of app *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Type of Applicant:</strong> @account.ApplicantType
+                        </div> <hr />
+                        @* person with dis no. *@
+                            @if (account.ApplicantType == "Renewal")
+                            {
+                                <div class="form-group">
+                                    <label for="pwdNumber">PWD Number:</label>
+                            <input type="text" class="form-control" style="border:none" value="@account.DisabilityNumber" readonly />
+                                </div>
+                            }
+
+                        @* date applied *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                 <strong>Date Applied:</strong> @account.CreatedAt.ToString("yyyy-MM-dd")
+                        </div> <hr />
+
+                        @* Personal Info *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong style="font-size:22px;">Personal Information</strong>
+                        </div>
+                        @* Fathers Name *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Father's Name:</strong> @account.FatherLastName,@account.FatherFirstName 
+                        </div>
+                        @* Mothers Name *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Mother's Name:</strong> @account.MotherLastName,@account.MotherFirstName
+                        </div>
+                        @* Guardian Name *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Guardian's Name:</strong> @account.GuardianLastName,@account.GuardianFirstName
+                        </div><hr />
+
+                        @* Type of Dis *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Type of Disability:</strong> @account.TypeOfDisability
+                        </div><hr />
+
+                        @* Cause of Dis *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Cause of Disability:</strong> @account.CauseOfDisability
+                        </div><hr />
+
+                        @* Residence Add *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong style="font-size:22px;">Residence Address</strong>
+                        </div>
+                        @* House No & Street *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>House No. and Street:</strong> @account.HouseNoAndStreet
+                        </div>
+                        @* Barangay *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Barangay:</strong> @account.Barangay
+                        </div>
+                        @* Municipality *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Municipality:</strong> @account.Municipality
+                        </div>
+                        @* Region *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Region:</strong> @account.Region
+                        </div><hr />
+
+                        @* Contact Details *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong style="font-size:22px;">Contact Details</strong>
+                        </div>
+                        @* Landline No *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <strong>Landline No.:</strong> @account.LandlineNo
+                        </div>
+                        @* Mobile No *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Mobile No.:</strong> @account.MobileNo
+                        </div>
+                        @* Email Address *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Email Address:</strong> @account.EmailAddress
+                        </div><hr />
+
+                        @* Educ Attain *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Educational Attainment:</strong> @account.EducationalAttainment
+                        </div><hr />
+
+                        @* Status Employ *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Status of Employment:</strong> @account.StatusOfEmployment
+                        </div><hr />
+
+                        @* Category Employ *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Category of Employment:</strong> @account.CategoryOfEmployment
+                        </div><hr />
+
+                        @* Type of Employ *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Type of Employment:</strong> @account.TypeOfEmployment
+                        </div><hr />
+
+                        @* Occupation *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Occupation:</strong>
+                        @if (account.Occupation == "Other" && !string.IsNullOrWhiteSpace(account.OtherOccupation))
+                            {
+                            @account.OtherOccupation
+                            }
+                            else
+                            {
+                            @account.Occupation
+                            }
+                        </div><hr />
+
+                        @* Org Info *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong style="font-size:22px;">Organization Information:</strong>
+                        </div>
+                        @* Org Affiliated *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Organization Affiliated:</strong> @account.OrganizationAffiliated
+                        </div><hr />
+                        @* Contact Person *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Contact Person:</strong> @account.ContactPerson
+                        </div><hr />
+                        @* Office Add *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Office Address:</strong> @account.OfficeAddress
+                        </div><hr />
+                        @* Tel. Nos *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <strong>Tel. Nos:</strong> @account.OfficeTelNo
+                        </div><hr />
+
+                        @* Id Ref No. *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong style="font-size:22px;">ID Reference No.:</strong>
+                        </div>
+                        @* SSS No *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>SSS No.:</strong> @account.SSSNo
+                        </div>
+                        @* GSIS No *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>GSIS No.:</strong> @account.GSISNo
+                        </div>
+                        @* Pagibig No *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>PAG-IBIG No.:</strong> @account.PagIBIGNo
+                        </div>
+                        @* PSN No *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>PSN No.:</strong> @account.PSNNo
+                        </div>
+                        @* PhilHealth No *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>PhilHealth No.:</strong> @account.PhilHealthNo
+                        </div><hr />
+
+                        @* Accomplish By *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong style="font-size:22px;">Accomplish By:</strong>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Last Name:</strong> @account.AccomplishByLastName
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>First Name:</strong> @account.AccomplishByFirstName
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Middle Name:</strong> @account.AccomplishByMiddleName
+                        </div><hr />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }

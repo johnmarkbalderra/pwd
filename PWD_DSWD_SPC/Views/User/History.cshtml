@@ -1,0 +1,309 @@
+﻿@* @{
+    ViewBag.Title = "History";
+    Layout = "~/Views/User/User_Layout.cshtml";
+}
+
+<!-- ========================= Main (CONTENT) ==================== -->
+<div class="main">
+    <div class="topbar">
+        <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+        </div>
+
+        <!-- User profile -->
+        <div class="user">
+            <a href="@Url.Action("AccountSetting", "User")">
+                <ion-icon name="person-outline" style="color: #0b2271;"></ion-icon>
+            </a>
+        </div>
+    </div>
+
+    <!-- History Content -->
+    <h2 class="text-start p-5" style="color: #0b2271;">
+        History
+        <p class="lead mt-2" style="font-size:13px">
+            of purchases
+        </p>
+    </h2>
+
+    <div class="pt-5 pb-5 mb-3" id="details-card">
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center">Id</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Establishment</th>
+                        <th class="text-center">Type of Purchase</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (string.IsNullOrEmpty(ViewBag.Transactions) || !Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(ViewBag.Transactions).HasValues)
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No transactions available.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        int incrementingId = 1; // Counter for Id
+                        foreach (var transaction in Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(ViewBag.Transactions))
+                        {
+                            <tr>
+                                <td class="text-center">@incrementingId</td>
+                                <td class="text-center">@transaction.CreatedDate</td>
+                                <td class="text-center">@transaction.EstablishmentName</td>
+                                <td class="text-center">@transaction.PurchaseType</td>
+                                <td class="text-center">
+                                    <button class="btn btn-outline-primary btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#view-purchases"
+                                            data-transaction-id="@transaction.TransactionId">
+                                        <ion-icon name="cart-outline"></ion-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                            incrementingId++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+    <!-- View Purchases Modal -->
+    <div class="modal fade" id="view-purchases" tabindex="-1" aria-labelledby="view-purchasesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#0B2271">
+                    <h5 class="modal-title" style="color:white">Purchases</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total Price</th>
+                                    <th>Total Discounted Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="purchaseItems">
+                                <!-- Item rows will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const transactions = JSON.parse('@Html.Raw(ViewBag.Transactions)');
+
+        // Create a map of transactions indexed by TransactionId for quick lookups
+        const transactionMap = transactions.reduce((map, transaction) => {
+            map[transaction.TransactionId] = transaction;
+            return map;
+        }, {});
+
+        const viewPurchasesModal = document.getElementById('view-purchases');
+        const purchaseItemsContainer = document.getElementById('purchaseItems');
+
+        const pesoFormatter = new Intl.NumberFormat('en-PH', {
+            style: 'currency',
+            currency: 'PHP',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        viewPurchasesModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const transactionId = button.getAttribute('data-transaction-id');
+            const transaction = transactionMap[transactionId];
+
+            purchaseItemsContainer.innerHTML = ''; // Clear previous rows
+
+            if (transaction && transaction.Items) {
+                transaction.Items.forEach(item => {
+                    const row = `<tr>
+                                    <td>${item.Description}</td>
+                                    <td>${item.Quantity}</td>
+                                    <td>${pesoFormatter.format(item.Price)}</td>
+                                    <td>${pesoFormatter.format(item.TotalPrice)}</td>
+                                    <td>${pesoFormatter.format(item.DiscountedPrice)}</td>
+                                </tr>`;
+                    purchaseItemsContainer.innerHTML += row;
+                });
+            } else {
+                purchaseItemsContainer.innerHTML = `<tr><td colspan="5">No items found.</td></tr>`;
+            }
+        });
+    });
+
+</script>
+ *@
+
+@{
+    ViewBag.Title = "History";
+    Layout = "~/Views/User/User_Layout.cshtml";
+}
+
+<!-- ========================= Main (CONTENT) ==================== -->
+<div class="main">
+    <div class="topbar">
+        <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+        </div>
+
+        <!-- User profile -->
+        <div class="user">
+            <a href="@Url.Action("AccountSetting", "User")">
+                <ion-icon name="person-outline" style="color: #0b2271;"></ion-icon>
+            </a>
+        </div>
+    </div>
+
+    <!-- History Content -->
+    <h2 class="text-start p-5" style="color: #0b2271;">
+        History
+        <p class="lead mt-2" style="font-size:13px">
+            of purchases
+        </p>
+    </h2>
+
+    <div class="pt-5 pb-5 mb-3" id="details-card">
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center">Id</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Establishment</th>
+                        <th class="text-center">Type of Purchase</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (string.IsNullOrEmpty(ViewBag.Transactions) || !Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(ViewBag.Transactions).HasValues)
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No transactions available.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        int incrementingId = 1; // Counter for Id
+                        foreach (var transaction in Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(ViewBag.Transactions))
+                        {
+                            <tr>
+                                <td class="text-center">@incrementingId</td>
+                                <td class="text-center">@transaction.CreatedDate</td>
+                                <td class="text-center">@transaction.EstablishmentName</td>
+                                <td class="text-center">@transaction.PurchaseType</td>
+                                <td class="text-center">
+                                    <button class="btn btn-outline-primary btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#view-purchases"
+                                            data-transaction-id="@transaction.TransactionId">
+                                        <ion-icon name="cart-outline"></ion-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                            incrementingId++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- View Purchases Modal -->
+    <div class="modal fade" id="view-purchases" tabindex="-1" aria-labelledby="view-purchasesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#0B2271">
+                    <h5 class="modal-title" style="color:white">Purchases</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total Price</th>
+                                    <th>Total Discounted Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="purchaseItems">
+                                <!-- Item rows will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const transactions = JSON.parse('@Html.Raw(ViewBag.Transactions)');
+
+        // Create a map of transactions indexed by TransactionId for quick lookups
+        const transactionMap = transactions.reduce((map, transaction) => {
+            map[transaction.TransactionId] = transaction;
+            return map;
+        }, {});
+
+        const viewPurchasesModal = document.getElementById('view-purchases');
+        const purchaseItemsContainer = document.getElementById('purchaseItems');
+
+        const pesoFormatter = new Intl.NumberFormat('en-PH', {
+            style: 'currency',
+            currency: 'PHP',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        viewPurchasesModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const transactionId = button.getAttribute('data-transaction-id');
+            const transaction = transactionMap[transactionId];
+
+            purchaseItemsContainer.innerHTML = ''; // Clear previous rows
+
+            if (transaction && transaction.Items) {
+                transaction.Items.forEach(item => {
+                    const row = `<tr>
+                                    <td>${item.Description}</td>
+                                    <td>${item.Quantity}</td>
+                                    <td>${pesoFormatter.format(item.Price)}</td>
+                                    <td>${pesoFormatter.format(item.TotalPrice)}</td>
+                                    <td>${pesoFormatter.format(item.DiscountedPrice)}</td>
+                                </tr>`;
+                    purchaseItemsContainer.innerHTML += row;
+                });
+            } else {
+                purchaseItemsContainer.innerHTML = `<tr><td colspan="5">No items found.</td></tr>`;
+            }
+        });
+    });
+</script>

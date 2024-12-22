@@ -1,0 +1,337 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Admin/Admin_Layout.cshtml";
+}
+
+<!--PWD Per Brgy css-->
+<style>
+    .details {
+        position: relative;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 3fr 3fr 3fr;
+        grid-gap: 10px;
+        margin-bottom: 20px
+    }
+
+    .cardHeader h4 {
+        font-weight: 600;
+        color: #0B2271;
+    }
+
+    .details table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+        .details table thead td {
+            font-weight: 600;
+        }
+
+    .recentOrders table tr {
+        color: var(--black1);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+        .recentOrders table tr:last-child {
+            border-bottom: none;
+        }
+
+    .recentOrders table tbody tr:hover {
+        background: var(--blue);
+        color: var(--white);
+    }
+
+    .recentOrders table tr td {
+        padding: 10px;
+    }
+
+        .recentOrders table tr td:last-child {
+            text-align: end;
+        }
+
+        .recentOrders table tr td:nth-child(2) {
+            text-align: end;
+        }
+
+        .recentOrders table tr td:nth-child(3) {
+            text-align: center;
+        }
+
+    .recentCustomers {
+        position: relative;
+        display: table-column;
+        min-height: 500px;
+        padding: 20px;
+        background: var(--white);
+        box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+        border-radius: 20px;
+    }
+
+        .recentCustomers .imgBx {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+            .recentCustomers .imgBx img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .recentCustomers table tr td {
+            padding: 12px 10px;
+            transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+        }
+
+            .recentCustomers table tr td h4 {
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 1.2rem;
+            }
+
+                .recentCustomers table tr td h4 span {
+                    font-size: 14px;
+                    color: var(--black2);
+                }
+
+        .recentCustomers .cardHeader h4 {
+            font-size: 18px;
+            color: #0B2271;
+        }
+
+        .recentCustomers table tr:hover {
+            background: #0B2271;
+            color: #ffff;
+        }
+
+
+            .recentCustomers table tr:hover td {
+                color: #ffff;
+            }
+
+                .recentCustomers table tr:hover td h4 span {
+                    color: #ffff;
+                }
+
+            .recentCustomers table tr:hover td {
+                background: inherit;
+            }
+
+    .scrollableTable {
+        max-height: 600px;
+        overflow-y: auto;
+    }
+
+        .scrollableTable table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .scrollableTable table tr td {
+                padding: 10px;
+            }
+</style>
+
+
+
+
+<h3 class="text-dark mb-0" style="padding-top: 20px;">Dashboard</h3>
+<div class="row">
+    <div class="col-12 col-sm-6 col-md-3 mb-4">
+        <div class="card shadow border-start-primary h-100">
+            <div class="card-body d-flex flex-column">
+                <div class="row align-items-center no-gutters flex-grow-1">
+                    <div class="col me-2">
+                        <a href="@Url.Action("ListofAllAccounts","Admin")" style="border-style: none;">
+                            <div class="text-uppercase fw-bold text-primary text-xs mb-1"><span>Total PWDs (valid)</span></div>
+                            <div class="fw-bold text-dark h5 mb-0"><span>@ViewBag.TotalApprovedApplicants</span></div>
+                        </a>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-user-friends fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-3 mb-4">
+        <div class="card shadow border-start-success h-100">
+            <div class="card-body d-flex flex-column">
+                <div class="row align-items-center no-gutters flex-grow-1">
+                    <div class="col me-2">
+                        <a href="@Url.Action("ArchivedAccounts","Admin")" style="border-style: none;">
+                            <div class="text-uppercase fw-bold text-danger text-xs mb-1"><span>Archived Applicants&nbsp;</span></div>
+                            <div class="fw-bold text-dark h5 mb-0"><span>@ViewBag.TotalArchivedApplicants</span></div>
+                        </a>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-file-archive fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-3 mb-4">
+        <div class="card shadow border-start-success h-100">
+            <div class="card-body d-flex flex-column">
+                <div class="row align-items-center no-gutters flex-grow-1">
+                    <div class="col me-2">
+                        <a href="@Url.Action("Applicants","Applicant")" style="border-style: none;">
+                            <div class="text-uppercase fw-bold text-warning text-xs mb-1"><span>Pending PWD Applicants</span></div>
+                            <div class="fw-bold text-dark h5 mb-0"><span>@ViewBag.TotalPendingApplicants</span></div>
+                        </a>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-user-clock fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-3 mb-4">
+        <div class="card shadow border-start-success h-100">
+            <div class="card-body d-flex flex-column">
+                <div class="row align-items-center no-gutters flex-grow-1">
+                    <div class="col me-2">
+                        <a asp-action="GenerateApprovedApplicantsExcel" style="border-style: none;">
+                            <div class="text-uppercase fw-bold text-success text-xs mb-1"><span>Download Approved Applicants</span></div>
+                        </a>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-file-download fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="details">
+    <!-- ================= Report Section ================ -->
+    <div class="recentCustomers card shadow border-start-primary py-2">
+        <div class="card-body">
+            <div class="row align-items-center no-gutters">
+                <div class="col-12 col-md-9 me-2">
+                    <h4 style="font-weight: 600; color:#0B2271;">
+                        Total Reports :
+                        <span class="fw-bold text-dark h5 mb-0">@ViewBag.TotalReports</span>
+                    </h4>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-tasks fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
+        <div class="scrollableTable">
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Type of Disability</td>
+                        <td>Status</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var report in ViewBag.Reports)
+                    {
+                        <tr>
+                            <td>@report.FullName</td>
+                            <td>@report.TypeOfDisability</td>
+                            <td>@report.Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ================= Pwd per Brgy ================ -->
+    <div class="recentCustomers card shadow border-start-success py-2">
+        <div class="card-body">
+            <div class="row align-items-center no-gutters">
+                <div class="col-12 col-md-9 me-2">
+                    <h4 style="font-weight: 600; color:#0B2271;">PWD Per Barangay</h4>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-building fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
+        <div class="scrollableTable">
+            <table class="table-responsive">
+                <thead>
+                    <tr>
+                        <td>Barangay</td>
+                        <td>Count of PWDs</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.PwdCountsPerBarangay)
+                    {
+                        <tr>
+                            <td>
+                                <h4>@item.Barangay</h4>
+                            </td>
+                            <td>
+                                <h4>@item.Count</h4>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ================= Establishment Analytics ================ -->
+    <div class="recentCustomers card shadow border-start-success py-2">
+        <div class="card-body">
+            <div class="row align-items-center no-gutters">
+                <div class="col-12 col-md-9 me-2">
+                    <h4 style="font-weight: 600; color:#0B2271;">
+                        Total Establishments :
+                        <span class="fw-bold text-dark h5 mb-0">@ViewBag.TotalAccreditedEstablishments</span>
+                    </h4>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-store fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
+        <div class="scrollableTable">
+            <table class="table-responsive">
+                <thead>
+                    <tr>
+                        <td>Establishment</td>
+                        <td>Total Visits</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var visit in ViewBag.TotalVisits)
+                    {
+                        <tr>
+                            <td>
+                                @visit.EstablishmentName
+                                @if (!string.IsNullOrEmpty(visit.BranchName))
+                                {
+                                    <span> - @visit.BranchName</span>
+                                }
+                            </td>
+                            <td>@visit.TotalVisits</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+</div>

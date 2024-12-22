@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "User Dashboard";
+    Layout = "~/Views/User/User_Layout.cshtml";
+}
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+</head>
+
+<!-- ========================= Main (TOP) ==================== -->
+<div class="main">
+    <div class="topbar">
+        <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+        </div>
+
+        @* user profile *@
+        <div class="user">
+            <a href="@Url.Action("AccountSetting", "User")">
+                <ion-icon name="person-outline" style="color: #0b2271;"></ion-icon>
+            </a>
+        </div>
+    </div>
+
+
+
+    <!-- ======================= Cards ================== -->
+    <div class="cardBox">
+        <div class="card">
+            <div class="numbers">₱@ViewBag.RemainingBalance</div>
+            <div class="cardName">Remaining balance this week (Per Month)</div>
+
+            <div class="iconBx">
+                <ion-icon name="cash-outline"></ion-icon>
+            </div>
+        </div>
+
+        <div class="card" onclick="window.location.href='@Url.Action("History", "User")'">
+            <div class="numbers">History</div>
+            <div class="cardName">of purchased/discount</div>
+
+            <div class="iconBx">
+                <ion-icon name="time-outline"></ion-icon>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="details">
+        <div id="calendar">
+        </div>
+
+        <!-- ================= Accredited Establishment ================ -->
+        <div class="recentCustomers">
+            <div class="cardHeader">
+                <h2>Accredited Establishment</h2>
+            </div>
+
+            <table>
+                @foreach (var establishment in Model)
+                {
+                    <tr>
+                        <td width="60px">
+                            <div class="imgBx">
+                                <i class="fas fa-store fa-2x" style="color: #0B2271;"></i>
+                            </div>
+                        </td>
+                        <td>
+                            <h4>@establishment.EstablishmentName - @establishment.Branch</h4>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+
+</div>

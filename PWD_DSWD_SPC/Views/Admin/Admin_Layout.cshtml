@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/ADMIN-ASSET/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans&amp;display=swap">
+    <link rel="stylesheet" href="~/ADMIN-ASSET/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="~/ADMIN-ASSET/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="~/ADMIN-ASSET/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/css/bootstrap.min.css"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="~/ADMIN-ASSET/css/landing-styles.css">
+    <link rel="stylesheet" href="~/ADMIN-ASSET/css/zectStudio---Sidebar-Menu-by-bbbootstrap.css">
+</head> 
+
+
+
+<body id="body-pd">
+    <div id="sidemenu">
+        <header id="header" class="header">
+            <div id="header_toggle-1" class="header_toggle">
+                <i id="header-toggle" class="fa fa-star bx bx-menu" style="color: #0B2271;"></i>
+            </div>
+        </header>
+        <div id="nav-bar" class="l-navbar" style="background: #0E2C95;">
+            <nav class="nav">
+                <div>
+                    <a id="header_toggle-2" class="nav_logo header_toggle" href="@Url.Action("Admin", "Admin")">
+                        <picture>
+                            <img width="20" height="16" style="width: 25px;height: 23px;margin-left: -3px;" src="~/ADMIN-ASSET/img/DSWD_logo.png">
+                        </picture>
+                        <span class="nav_logo-name" style="font-size: 20px;text-align: center;">
+                            Admin <br>Dashboard
+                        </span>
+                    </a>
+
+                    <div class="nav_list">
+                        <a class="nav_link active" href="@Url.Action("Admin", "Admin")" style="color: rgb(255,255,255);">
+                            <i class="fas fa-tachometer-alt" style="width: 20px;border-color: rgb(255, 255, 255);border-top-color: rgb(255,;border-right-color: 255,;border-bottom-color: 255);border-left-color: 255,;">
+                            </i>
+                            <span class="nav_name">
+                                Dashboard
+                            </span>
+                        </a>
+
+                        <a class="nav_link" href="@Url.Action("Applicants", "Applicant")">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -64 640 640" width="1em" height="1em" fill="currentColor" class="bx bx-log-out nav_icon" style="color: rgb(255,255,255);padding-left: 0px;margin-left: -2px;">
+                                <path d="M224 256c70.7 0 128-57.31 128-128S294.7 0 224 0C153.3 0 96 57.31 96 128S153.3 256 224 256zM274.7 304H173.3C77.61 304 0 381.6 0 477.3C0 496.5 15.52 512 34.66 512h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304 274.7 304zM616 200h-48v-48C568 138.8 557.3 128 544 128s-24 10.75-24 24v48h-48C458.8 200 448 210.8 448 224s10.75 24 24 24h48v48C520 309.3 530.8 320 544 320s24-10.75 24-24v-48h48C629.3 248 640 237.3 640 224S629.3 200 616 200z"></path>
+                            </svg>
+                            <span class="nav_name" style="color: rgb(255,255,255);">
+                                Applicants
+                            </span>
+                        </a>
+
+                        <div class="dropdown nav_link" style="height: 40px;">
+                            <button class="btn btn-primary dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" data-bs-auto-close="true" style="background: rgba(13,110,253,0);border-style: none;margin-right: -12px;padding-left: 0px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 -64 640 640" width="1em" height="1em" fill="currentColor" style="width: 20px;padding-right: 4px;">
+                                    <path d="M425.1 482.6c-2.303-1.25-4.572-2.559-6.809-3.93l-7.818 4.493c-6.002 3.504-12.83 5.352-19.75 5.352c-10.71 0-21.13-4.492-28.97-12.75c-18.41-20.09-32.29-44.15-40.22-69.9c-5.352-18.06 2.343-36.87 17.83-45.24l8.018-4.669c-.0664-2.621-.0664-5.242 0-7.859l-7.655-4.461c-12.3-6.953-19.4-19.66-19.64-33.38C305.6 306.3 290.4 304 274.7 304H173.3C77.61 304 0 381.7 0 477.4C0 496.5 15.52 512 34.66 512H413.3c5.727 0 10.9-1.727 15.66-4.188c-2.271-4.984-3.86-10.3-3.86-16.06V482.6zM224 256c70.7 0 128-57.31 128-128S294.7 0 224 0C153.3 0 96 57.31 96 128S153.3 256 224 256zM610.5 373.3c2.625-14 2.625-28.5 0-42.5l25.75-15c3-1.625 4.375-5.125 3.375-8.5c-6.75-21.5-18.25-41.13-33.25-57.38c-2.25-2.5-6-3.125-9-1.375l-25.75 14.88c-10.88-9.25-23.38-16.5-36.88-21.25V212.3c0-3.375-2.5-6.375-5.75-7c-22.25-5-45-4.875-66.25 0c-3.25 .625-5.625 3.625-5.625 7v29.88c-13.5 4.75-26 12-36.88 21.25L394.4 248.5c-2.875-1.75-6.625-1.125-9 1.375c-15 16.25-26.5 35.88-33.13 57.38c-1 3.375 .3751 6.875 3.25 8.5l25.75 15c-2.5 14-2.5 28.5 0 42.5l-25.75 15c-3 1.625-4.25 5.125-3.25 8.5c6.625 21.5 18.13 41 33.13 57.38c2.375 2.5 6 3.125 9 1.375l25.88-14.88c10.88 9.25 23.38 16.5 36.88 21.25v29.88c0 3.375 2.375 6.375 5.625 7c22.38 5 45 4.875 66.25 0c3.25-.625 5.75-3.625 5.75-7v-29.88c13.5-4.75 26-12 36.88-21.25l25.75 14.88c2.875 1.75 6.75 1.125 9-1.375c15-16.25 26.5-35.88 33.25-57.38c1-3.375-.3751-6.875-3.375-8.5L610.5 373.3zM496 400.5c-26.75 0-48.5-21.75-48.5-48.5s21.75-48.5 48.5-48.5c26.75 0 48.5 21.75 48.5 48.5S522.8 400.5 496 400.5z">
+                                    </path>
+                                </svg>
+                                <span style="width: 78.2812px;height: 12px;padding-left: 15px;">
+                                    Manage users
+                                </span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="@Url.Action("AddAccount", "Admin")">
+                                    <i class="fa fa-users" style="width: 20px;font-size: 15px;"></i>
+                                    &nbsp;Manage Admin
+                                </a>
+                                <a class="dropdown-item" href="@Url.Action("ListofAllAccounts", "Admin")">
+                                    <i class="fa fa-users" style="width: 20px;font-size: 15px;"></i>
+                                    &nbsp;List of All Accounts
+                                </a>
+                                <a class="dropdown-item" href="@Url.Action("ArchivedAccounts", "Admin")">
+                                    <i class="fa fa-archive" style="width: 20px;"></i>
+                                    Archived Accounts
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="dropdown nav_link" style="height: 40px;">
+                            <button class="btn btn-primary dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" data-bs-auto-close="true" style="background: rgba(13,110,253,0);border-style: none;margin-right: -12px;padding-left: 0px;">
+                                <i class="fa fa-search" style="width: 20px;padding-right: 4px;"></i>
+                                <span style="width: 78.2812px;height: 12px;padding-left: 14px;">
+                                    Monitor Discount
+                                </span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="@Url.Action("Qr", "Admin")">
+                                    <i class="fa fa-qrcode" style="width: 20px;"></i>
+                                    Generate QR 
+                                </a>
+                                <a class="dropdown-item" href="@Url.Action("Commodities", "Admin")">
+                                    <i class="fa fa-shopping-cart" style="width: 20px;"></i>
+                                    Commodities
+                                </a>
+                                <a class="dropdown-item" href="@Url.Action("Medicines", "Admin")">
+                                    <i class="fa fa-medkit" style="width: 20px;"></i>
+                                    Medicines
+                                </a>
+                                <a class="dropdown-item" href="@Url.Action("Report", "Admin")">
+                                    <i class="fa fa-sticky-note" style="width: 20px;"></i>
+                                    Report
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Signout Trigger -->
+                    <a class="nav_link signout" data-bs-target="#bounceman" data-bs-toggle="modal" data-bs-backdrop="true">
+                        <i class="fa fa-sign-out bx bx-log-out nav_icon" style="color: rgb(255,255,255);padding-left: 0px;margin-left: -2px;"></i>
+                        <span class="nav_name" style="color: rgb(255,255,255);">Signout</span>
+                    </a>
+              </div>
+            </nav>
+           
+        </div>
+    </div>
+    <!-- Signout Modal -->
+    <div class="modal fade" id="bounceman" tabindex="-1" aria-labelledby="bounceman" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Signout Account</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to Signout? Once you signout you need to Login again.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-outline-primary" type="button" onclick="window.location.href='@Url.Action("Landing", "Landing")'">Yes, Signout!</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        @RenderBody()
+        @RenderSection("Scripts", required: false)
+    </div>
+
+    <script src="~/ADMIN-ASSET/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/ADMIN-ASSET/js/chart.min.js"></script>
+    <script src="~/ADMIN-ASSET/js/bs-init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="~/ADMIN-ASSET/js/zectStudio---Sidebar-Menu-by-bbbootstrap-sidemenu.js"></script>
+</body>
+</html>

@@ -1,0 +1,654 @@
+﻿@model PWD_DSWD_SPC.Models.AccountViewModel
+
+<style>
+    #title-container {
+    padding: 20px;
+}
+
+    @@media (max-width: 576px) {
+        #title-container {
+            text-align: center;
+        }
+
+        #form-wrapper {
+            padding: 10px;
+        }
+    }
+.progress {
+    width: 100%;
+    margin: 10px 0;
+}
+
+</style>
+
+
+        <!-- CONTAINER -->
+        <div class="container d-flex align-items-center min-vh-100">
+          <div class="row g-4 justify-content-center">
+        <!-- TITLE -->
+        <div class="col-lg-4 col-md-6 col-sm-12 text-center">
+                <div id="title-container">@* " class="text-center text-md-start"> *@
+                <a href="@Url.Action("Landing","Landing")" style="border-style: none;">
+                    <img src="~/doh.png" class="pwd-image img-fluid mb-3" alt="dswdlogo" style="max-width: 150px;">
+                </a>
+                    <h2>Person with Disability (PWD)</h2>
+                    <h3>Registration Form</h3>
+                    <p><strong>Note:</strong> Please fill up completely and correctly the required information before each item below. For items that are not associated to you, please put <strong><em>N/A.</em></strong> </p>
+                </div>
+            </div>
+            <!-- FORMS -->
+        <div class="col-lg-7 col-md-8 col-sm-12">
+            <div class="progress mb-3">
+                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 0%"></div>
+                </div>
+                <div id="qbox-container">
+                <form asp-controller="Register" class="needs-validation" id="form-wrapper" name="form-wrapper" asp-action="Add" method="post" novalidate>
+                    <!-- STEPS -->
+                    <div id="steps-container">
+                        <!-- 1st Type of Applicant -->
+                        <div class="step">
+                            <h4 class="mt-5">Type of Applicant</h4>
+                            <div class="form-check ps-0 q-box">
+                                <div class="q-box__question">
+                                    @Html.RadioButtonFor(m => m.ApplicantType, "New Applicant", new { @class = "form-check-input question__input", name = "ApplicantType", id = "newApplicant" })
+                                    <label class="form-check-label question__label" for="newApplicant">New Applicant</label>
+                                </div>
+                                <div class="q-box__question">
+                                    @Html.RadioButtonFor(m => m.ApplicantType, "Renewal", new { @class = "form-check-input question__input", name = "ApplicantType", id = "renewApplicant" })
+                                    <label class="form-check-label question__label" for="renewApplicant">Renewal</label>
+                                </div>
+                                <span asp-validation-for="ApplicantType" class="text-danger"></span>
+                                
+
+                                <!-- Persons with Disability Number -->
+                                <h4>Persons with Disability Number</h4>
+                                <div class="q-box__question">
+                                    <input type="number" asp-for="DisabilityNumber" class="form-control" placeholder="RR-PPMM-BBB-NNNNNNN" name="DisabilityNumber" />
+                                    <span asp-validation-for="DisabilityNumber" class="text-danger"></span>
+                                </div>
+
+                                <!-- Date Applied -->
+                                <h4>Date Applied</h4>
+                                <div class="q-box__question">
+                                    <input type="date" asp-for="CreatedAt" class="form-control" id="dateApplied" readonly required />
+                                    <span asp-validation-for="CreatedAt" class="text-danger"></span>
+                                    <p class="text-center mt-3 mb-0">Already have an account? <a href="@Url.Action("Login", "Landing")" style="color: #0e2b95;"> Login Here! </a></p>
+                                </div>
+                            </div>
+                        </div>
+
+                            <!-- 2nd Personal Information -->
+                            <div class="step">
+                                <h4>Personal Information</h4>
+                                <div class="form-check ps-0 q-box">
+                                    <!-- Last Name -->
+                                    <div class="row">
+                                        <div class="q-box__question col-lg-6">
+                                            <label for="" asp-for="LastName" class="form-label fw-semibold">Last Name:&nbsp; </label>
+                                            <input type="text" asp-for="LastName" class="form-control" required>
+                                            <span asp-validation-for="LastName"></span>
+                                        </div>
+                                        <!-- First Name -->
+                                        <div class="q-box__question col-lg-6">
+                                            <label for="" asp-for="FirstName" class="form-label fw-semibold">First Name:&nbsp; </label>
+                                            <input type="text" asp-for="FirstName" class="form-control" required>
+                                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <!-- Middle Name -->
+                                    <div class="row mt-2">
+                                        <div class="q-box__question col-lg-6">
+                                            <label for="" asp-for="MiddleName" class="form-label fw-semibold">Middle Name:&nbsp; </label>
+                                            <input type="text" x asp-for="MiddleName" class="form-control" required>
+                                            <span asp-validation-for="MiddleName" class="text-danger"></span>
+                                        </div>
+                                        <!-- Suffix -->
+                                        <div class="q-box__question col-lg-6">
+                                            <label for="" asp-for="suffix" class="form-label fw-semibold">Suffix:&nbsp; </label>
+                                            <input type="text" asp-for="suffix" class="form-control" required>
+                                          
+                                        </div>
+                                    </div>
+                                    <!-- Date of Birth -->
+                                    <div class="q-box__question mt-2">
+                                        <label for="" asp-for="DateOfBirth" class="form-label fw-semibold">Date of Birth:&nbsp; </label>
+                                        <input type="date" asp-for="DateOfBirth" class="form-control" required>
+                                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                    </div>
+                                <!-- Gender -->
+                                <h6 class="mt-2">Sex:</h6>
+                                <div class="row">
+                                    <div class="q-box__question col-lg-6">
+                                        @Html.RadioButtonFor(m => m.Gender, "Male", new { @class = "form-check-input question__input", id = "gender-male", required = "required" })
+                                        <label class="form-check-label question__label" for="gender-male">Male</label>
+                                    </div>
+                                    <div class="q-box__question col-lg-6">
+                                        @Html.RadioButtonFor(m => m.Gender, "Female", new { @class = "form-check-input question__input", id = "gender-female", required = "required" })
+                                        <label class="form-check-label question__label" for="gender-female">Female</label>
+                                    </div>
+                                    <span asp-validation-for="Gender" class="text-danger"></span>
+                                </div>
+
+                                <!-- Civil Status -->
+                                <h6 class="mt-2">Civil Status:</h6>
+                                <div class="row g-3">
+                                    <div class="q-box__question col-4">
+                                        @Html.RadioButtonFor(m => m.CivilStatus, "Single", new { @class = "form-check-input question__input", id = "status-single", required = "required" })
+                                        <label class="form-check-label question__label" for="status-single">Single</label>
+                                    </div>
+                                    <div class="q-box__question col-4">
+                                        @Html.RadioButtonFor(m => m.CivilStatus, "Separated", new { @class = "form-check-input question__input", id = "status-separated", required = "required" })
+                                        <label class="form-check-label question__label" for="status-separated">Separated</label>
+                                    </div>
+                                    <div class="q-box__question col-4">
+                                        @Html.RadioButtonFor(m => m.CivilStatus, "Live-in", new { @class = "form-check-input question__input", id = "status-livein", required = "required" })
+                                        <label class="form-check-label question__label" for="status-livein">Live-in</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="q-box__question col-lg-6">
+                                        @Html.RadioButtonFor(m => m.CivilStatus, "Married", new { @class = "form-check-input question__input", id = "status-married", required = "required" })
+                                        <label class="form-check-label question__label" for="status-married">Married</label>
+                                    </div>
+                                    <div class="q-box__question col-lg-6">
+                                        @Html.RadioButtonFor(m => m.CivilStatus, "Widow/er", new { @class = "form-check-input question__input", id = "status-widower", required = "required" })
+                                        <label class="form-check-label question__label" for="status-widower">Widow/er</label>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="CivilStatus" class="text-danger"></span>
+
+
+                                    <!-- Family Background -->
+                                    <h4>Family Background</h4>
+                                    <!-- Father Name -->
+                                    <h6>Father's Name:</h6>
+                                    <div class="row g-3">
+                                        <div class="q-box__question col-4">
+                                            <input type="text" asp-for="FatherLastName" class="form-control" placeholder="Last Name" required>
+                                            <span asp-validation-for="FatherLastName" class="text-danger"></span>
+                                        </div>
+                                        <div class="q-box__question col-4">
+                                            <input type="text" asp-for="FatherFirstName" class="form-control"  placeholder="First Name" required>
+                                            <span asp-validation-for="FatherFirstName" class="text-danger"></span>
+                                        </div>
+                                        <div class="q-box__question col-4">
+                                            <input type="text" asp-for="FatherMiddleName" class="form-control" placeholder="Middle Name" required>
+                                            <span asp-validation-for="FatherMiddleName" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <!-- Mother Name -->
+                                    <h6 class="mt-2">Mother's Name:</h6>
+                                    <div class="row g-3">
+                                        <div class="q-box__question col-4">
+                                            <input type="text" asp-for="MotherLastName" class="form-control"  placeholder="Last Name" required>
+                                            <span asp-validation-for="MotherLastName" class="text-danger"></span>
+                                        </div>
+                                        <div class="q-box__question col-4">
+                                            <input type="text" asp-for="MotherFirstName" class="form-control"  placeholder="First Name" required>
+                                            <span asp-validation-for="MotherFirstName" class="text-danger"></span>
+                                        </div>
+                                        <div class="q-box__question col-4">
+                                            <input type="text" asp-for="MotherMiddleName" class="form-control"  placeholder="Middle Name" required>
+                                            <span asp-validation-for="MotherMiddleName" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <!-- Guardian Name -->
+                                    <h6 class="mt-2">Guardian's Name:</h6>
+                                    <div class="row g-3">
+                                        <div class="q-box__question col-4">
+                                            <input type="text" asp-for="GuardianLastName" class="form-control" placeholder="Last Name" required>
+                                            <span asp-validation-for="GuardianLastName" class="text-danger"></span>
+                                        </div>
+                                        <div class="q-box__question col-4">
+                                            <input type="text" asp-for="GuardianFirstName" class="form-control" placeholder="First Name" required>
+                                            <span asp-validation-for="GuardianFirstName" class="text-danger"></span>
+                                        </div>
+                                        <div class="q-box__question col-4">
+                                            <input type="text" asp-for="GuardianMiddleName" class="form-control" placeholder="Middle Name" required>
+                                            <span asp-validation-for="GuardianMiddleName" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="step">
+                                <!-- 3rd Disability-->
+                            <div class="row">
+                                <!-- Type of Disability -->
+                                <div class="col-lg-6">
+                                    <h4>Type of Disability</h4>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.TypeOfDisability, "Deaf", new { @class = "form-check-input question__input", id = "type-deaf" })
+                                        <label class="form-check-label question__label" for="type-deaf">Deaf</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.TypeOfDisability, "Intellectual Disability", new { @class = "form-check-input question__input", id = "type-intellectual" })
+                                        <label class="form-check-label question__label" for="type-intellectual">Intellectual Disability</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.TypeOfDisability, "Learning Disability", new { @class = "form-check-input question__input", id = "type-learning" })
+                                        <label class="form-check-label question__label" for="type-learning">Learning Disability</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.TypeOfDisability, "Mental Disability", new { @class = "form-check-input question__input", id = "type-mental" })
+                                        <label class="form-check-label question__label" for="type-mental">Mental Disability</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.TypeOfDisability, "Physical Disability (Orthopedic)", new { @class = "form-check-input question__input", id = "type-physical" })
+                                        <label class="form-check-label question__label" for="type-physical">Physical Disability (Orthopedic)</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.TypeOfDisability, "Psychosocial Disability", new { @class = "form-check-input question__input", id = "type-psychosocial" })
+                                        <label class="form-check-label question__label" for="type-psychosocial">Psychosocial Disability</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.TypeOfDisability, "Speech and Language Impairment", new { @class = "form-check-input question__input", id = "type-speech" })
+                                        <label class="form-check-label question__label" for="type-speech">Speech and Language Impairment</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.TypeOfDisability, "Visual Disability", new { @class = "form-check-input question__input", id = "type-visual" })
+                                        <label class="form-check-label question__label" for="type-visual">Visual Disability</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.TypeOfDisability, "Cancer (RA11215)", new { @class = "form-check-input question__input", id = "type-cancer" })
+                                        <label class="form-check-label question__label" for="type-cancer">Cancer (RA11215)</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.TypeOfDisability, "Rare Disease (RA10747)", new { @class = "form-check-input question__input", id = "type-rare" })
+                                        <label class="form-check-label question__label" for="type-rare">Rare Disease (RA10747)</label>
+                                    </div>
+                                    <span asp-validation-for="TypeOfDisability" class="text-danger"></span>
+                                </div>
+
+                                <!-- Cause of Disability -->
+                                <div class="col-lg-6">
+                                    <h4>Cause of Disability</h4>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.CauseOfDisability, "Congenital/Inborn", new {  @class = "form-check-input question__input", id = "cause-inborn", @required = "required" })
+                                        <label class="form-check-label question__label" for="cause-inborn">Congenital/Inborn</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.CauseOfDisability, "Autism", new {  @class = "form-check-input question__input", id = "cause-autism", @required = "required" })
+                                        <label class="form-check-label question__label" for="cause-autism">Autism</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.CauseOfDisability, "Down Syndrome", new { @class = "form-check-input question__input", id = "cause-down", @required = "required" })
+                                        <label class="form-check-label question__label" for="cause-down">Down Syndrome</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.CauseOfDisability, "ADHD", new { @class = "form-check-input question__input", id = "cause-adhd", @required = "required" })
+                                        <label class="form-check-label question__label" for="cause-adhd">ADHD</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.CauseOfDisability, "Cerebral Palsy", new { @class = "form-check-input question__input", id = "cause-cerebral-ill", @required = "required" })
+                                        <label class="form-check-label question__label" for="cause-cerebral-ill">Cerebral Palsy</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.CauseOfDisability, "Acquired", new {  @class = "form-check-input question__input", id = "cause-acquired", @required = "required" })
+                                        <label class="form-check-label question__label" for="cause-acquired">Acquired</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.CauseOfDisability, "Chronic Illness", new {  @class = "form-check-input question__input", id = "cause-chronic", @required = "required" })
+                                        <label class="form-check-label question__label" for="cause-chronic">Chronic Illness</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.CauseOfDisability, "Cerebral", new {  @class = "form-check-input question__input", id = "cause-cerebral", @required = "required" })
+                                        <label class="form-check-label question__label" for="cause-cerebral">Cerebral</label>
+                                    </div>
+                                    <div class="q-box__question">
+                                        @Html.RadioButtonFor(m => m.CauseOfDisability, "Injury", new {  @class = "form-check-input question__input", id = "cause-injury", @required = "required" })
+                                        <label class="form-check-label question__label" for="cause-injury">Injury</label>
+                                    </div>
+                                    <span asp-validation-for="CauseOfDisability" class="text-danger"></span>
+                                </div>
+                            </div>
+                            </div>
+
+                            <!-- 4th Residence Address -->
+                            <div class="step">
+                                <h4>Residence Address</h4>
+                                <div class="row mt-2">
+                                    <!-- House No. and Street -->
+                                    <div class="q-box__question col-lg-5">
+                                        <label for="" asp-for="HouseNoAndStreet" class="form-label fw-semibold">House No. and Street: </label>
+                                        <input type="text" asp-for="HouseNoAndStreet" class="form-control" required>
+                                    </div>
+                                    <!-- Barangay -->
+                                    <div class="q-box__question col-lg-7">
+                                        <label class="form-label fw-semibold">Barangay: </label>
+
+                                        <select id="brgy" class="form-select" asp-items="Model.BarangayList" asp-for="SelectedBrgy" onchange="updateDropdown()">
+                                            <option value="No Selected Value">--- Please Select A Barangay ---</option>
+                                            <!-- Options populated from the model -->
+                                        </select>
+
+                                    </div>
+
+
+                                <!-- Municipality -->
+                                <div class="row">
+                                    <div class="q-box__question col-lg-4">
+                                        <label for="" asp-for="Municipality" class="form-label fw-semibold">Municipality:&nbsp; </label>
+                                        <input type="text" asp-for="Municipality" class="form-control" value="San Pablo City" readonly="">
+                                        <span asp-validation-for="Municipality" class="text-danger"></span>
+                                    </div>
+                                    <!-- Province -->
+                                    <div class="q-box__question col-lg-3">
+                                        <label for="" asp-for="Province" class="form-label fw-semibold">Province:&nbsp; </label>
+                                        <input type="text" asp-for="Province" class="form-control"  value="Laguna" readonly="">
+                                        <span asp-validation-for="Province" class="text-danger"></span>
+                                    </div>
+                                    <!-- Region -->
+                                    <div class="q-box__question col-lg-5">
+                                        <label for="" asp-for="Region" class="form-label fw-semibold">Region:&nbsp; </label>
+                                        <input type ="text" asp-for="Region" class="form-control" value="IV-A" readonly="">
+                                        <span asp-validation-for="Region" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <h4 class="mt-2">Contact Details</h4>
+                                <!-- LandlineNo -->
+                                <div class="row">
+                                    <div class="q-box__question col-lg-4">
+                                        <label for="" asp-for="LandlineNo" class="form-label fw-semibold">Landline No.:&nbsp; </label>
+                                        <input type="text" asp-for="LandlineNo" class="form-control" required>
+                                        <span asp-validation-for="LandlineNo" class="text-danger"></span>
+                                    </div>
+                                    <!-- Mobile No. -->
+                                    <div class="q-box__question col-lg-4">
+                                        <label for="" asp-for="MobileNo" class="form-label fw-semibold">Mobile No:&nbsp; </label>
+                                        <input type="text" asp-for="MobileNo" class="form-control" required>
+                                        <span asp-validation-for="MobileNo" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="q-box__question col-lg-4">
+                                        <label asp-for="EmailAddress" class="form-label fw-semibold">E-mail Address:&nbsp; </label>
+                                        <input type="email" asp-for="EmailAddress" class="form-control" required>
+                                        <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                                    </div>
+
+                                </div>
+                                <!-- Educational Attainment -->
+                                <h4 class="mt-2">Educational Attainment:</h4>
+                                <div class="row g-2">
+                                    <div class="q-box__question col-6">
+                                        @Html.RadioButtonFor(m => m.EducationalAttainment, "None", new { @class = "form-check-input question__input", required = "required", id = "educ-None" })
+                                        <label class="form-check-label question__label" for="educ-None">None</label>
+                                    </div>
+                                    <div class="q-box__question col-6">
+                                        @Html.RadioButtonFor(m => m.EducationalAttainment, "Kindergarten", new { @class = "form-check-input question__input", required = "required", id = "educ-Kindergarten" })
+                                        <label class="form-check-label question__label" for="educ-Kindergarten">Kindergarten</label>
+                                    </div>
+                                </div>
+
+                                <div class="row g-2">
+                                    <div class="q-box__question col-6">
+                                        @Html.RadioButtonFor(m => m.EducationalAttainment, "Elementary", new { @class = "form-check-input question__input", required = "required", id = "educ-Elementary" })
+                                        <label class="form-check-label question__label" for="educ-Elementary">Elementary</label>
+                                    </div>
+                                    <div class="q-box__question col-6">
+                                        @Html.RadioButtonFor(m => m.EducationalAttainment, "Junior High School", new { @class = "form-check-input question__input", required = "required", id = "educ-Junior" })
+                                        <label class="form-check-label question__label" for="educ-Junior">Junior High School</label>
+                                    </div>
+                                </div>
+
+                                <div class="row g-2">
+                                    <div class="q-box__question col-6">
+                                        @Html.RadioButtonFor(m => m.EducationalAttainment, "Senior High School", new { @class = "form-check-input question__input", required = "required", id = "educ-Senior" })
+                                        <label class="form-check-label question__label" for="educ-Senior">Senior High School</label>
+                                    </div>
+                                    <div class="q-box__question col-6">
+                                        @Html.RadioButtonFor(m => m.EducationalAttainment, "College", new { @class = "form-check-input question__input", required = "required", id = "educ-College" })
+                                        <label class="form-check-label question__label" for="educ-College">College</label>
+                                    </div>
+                                </div>
+
+                                <div class="row g-2">
+                                    <div class="q-box__question col-6">
+                                        @Html.RadioButtonFor(m => m.EducationalAttainment, "Vocational", new { @class = "form-check-input question__input", required = "required", id = "educ-Vocational" })
+                                        <label class="form-check-label question__label" for="educ-Vocational">Vocational</label>
+                                    </div>
+                                    <div class="q-box__question col-6">
+                                        @Html.RadioButtonFor(m => m.EducationalAttainment, "Post Graduate", new { @class = "form-check-input question__input", required = "required", id = "educ-Post" })
+                                        <label class="form-check-label question__label" for="educ-Post">Post Graduate</label>
+                                    </div>
+                                </div>
+
+                                <span asp-validation-for="EducationalAttainment" class="text-danger"></span>
+
+                                    </div>
+                                    </div>
+
+                    <!-- 5th Status of Employment -->
+                    <div class="step">
+                        <!-- Status of Employment -->
+                        <h4>Status of Employment:</h4>
+                            <div class="row g-2">
+                                <div class="q-box__question col-12">
+                                    @Html.RadioButtonFor(m => m.StatusOfEmployment, "Employed", new { @class = "form-check-input question__input", required = "required", id = "status-Employed", onchange = "toggleEmploymentFields()" })
+                                    <label class="form-check-label question__label" for="status-Employed">Employed</label>
+                                </div>
+                                <div class="q-box__question col-12">
+                                    @Html.RadioButtonFor(m => m.StatusOfEmployment, "Unemployed", new { @class = "form-check-input question__input", required = "required", id = "status-Unemployed", onchange = "toggleEmploymentFields()" })
+                                    <label class="form-check-label question__label" for="status-Unemployed">Unemployed</label>
+                                </div>
+                                <div class="q-box__question col-12">
+                                    @Html.RadioButtonFor(m => m.StatusOfEmployment, "Self-employed", new { @class = "form-check-input question__input", required = "required", id = "status-Self-employed", onchange = "toggleEmploymentFields()" })
+                                    <label class="form-check-label question__label" for="status-Self-employed">Self-employed</label>
+                                </div>
+                            </div>
+                            <span asp-validation-for="StatusOfEmployment" class="text-danger"></span>
+
+                            <!-- Category of Employment -->
+                            <h4>Category of Employment:</h4>
+                            <div class="row g-2">
+                                <div class="q-box__question col-6">
+                                    @Html.RadioButtonFor(m => m.CategoryOfEmployment, "Private", new { @class = "form-check-input question__input", id = "categ-Private" })
+                                    <label class="form-check-label question__label" for="categ-Private">Private</label>
+                                </div>
+                                <div class="q-box__question col-6">
+                                    @Html.RadioButtonFor(m => m.CategoryOfEmployment, "Government", new { @class = "form-check-input question__input", id = "categ-Government" })
+                                    <label class="form-check-label question__label" for="categ-Government">Government</label>
+                                </div>
+                            </div>
+                            <span asp-validation-for="CategoryOfEmployment" class="text-danger"></span>
+
+                        <!-- Type of Employment -->
+                        <h4>Type of Employment:</h4>
+                        <div class="row g-2">
+                            <div class="q-box__question col-6">
+                                @Html.RadioButtonFor(m => m.TypeOfEmployment, "Permanent/Regular", new { @class = "form-check-input question__input", id = "type-permanent" })
+                                <label class="form-check-label question__label" for="type-permanent">Permanent/Regular</label>
+                            </div>
+                            <div class="q-box__question col-6">
+                                @Html.RadioButtonFor(m => m.TypeOfEmployment, "Casual", new { @class = "form-check-input question__input", id = "type-Casual" })
+                                <label class="form-check-label question__label" for="type-Casual">Casual</label>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="q-box__question col-6">
+                                @Html.RadioButtonFor(m => m.TypeOfEmployment, "Seasonal", new { @class = "form-check-input question__input", id = "type-Seasonal" })
+                                <label class="form-check-label question__label" for="type-Seasonal">Seasonal</label>
+                            </div>
+                            <div class="q-box__question col-6">
+                                @Html.RadioButtonFor(m => m.TypeOfEmployment, "Emergency", new { @class = "form-check-input question__input", id = "type-Emergency" })
+                                <label class="form-check-label question__label" for="type-Emergency">Emergency</label>
+                            </div>
+                        </div>
+                        <span asp-validation-for="TypeOfEmployment" class="text-danger"></span>
+
+                        <!-- Occupation -->
+                        <h4>Occupation:</h4>
+                            <div class="q-box__question">
+                                @Html.RadioButtonFor(m => m.Occupation, "Managers", new { @class = "form-check-input question__input", required = "required", id = "Occupation-Managers" })
+                                <label class="form-check-label question__label" for="Occupation-Managers">Managers</label>
+                            </div>
+                            <div class="q-box__question">
+                                @Html.RadioButtonFor(m => m.Occupation, "Professionals", new { @class = "form-check-input question__input", required = "required", id = "Occupation-Professionals" })
+                                <label class="form-check-label question__label" for="Occupation-Professionals">Professionals</label>
+                            </div>
+                            <div class="q-box__question">
+                                @Html.RadioButtonFor(m => m.Occupation, "Technicians and Associate Professionals", new { @class = "form-check-input question__input", required = "required", id = "Occupation-Tech" })
+                                <label class="form-check-label question__label" for="Occupation-Tech">Technicians and Associate Professionals</label>
+                            </div>
+                            <div class="q-box__question">
+                                @Html.RadioButtonFor(m => m.Occupation, "Clerical Support Workers", new { @class = "form-check-input question__input", required = "required", id = "Occupation-Clerical" })
+                                <label class="form-check-label question__label" for="Occupation-Clerical">Clerical Support Workers</label>
+                            </div>
+                            <div class="q-box__question">
+                                @Html.RadioButtonFor(m => m.Occupation, "Service and Sales Workers", new { @class = "form-check-input question__input", required = "required", id = "Occupation-Service" })
+                                <label class="form-check-label question__label" for="Occupation-Service">Service and Sales Workers</label>
+                            </div>
+                            <div class="q-box__question">
+                                @Html.RadioButtonFor(m => m.Occupation, "Skilled Agricultural, Forestry and Fishery Workers", new { @class = "form-check-input question__input", required = "required", id = "Occupation-Skilled" })
+                                <label class="form-check-label question__label" for="Occupation-Skilled">Skilled Agricultural, Forestry and Fishery Workers</label>
+                            </div>
+                            <div class="q-box__question">
+                                @Html.RadioButtonFor(m => m.Occupation, "Craft and Related Trade Workers", new { @class = "form-check-input question__input", required = "required", id = "Occupation-Craft" })
+                                <label class="form-check-label question__label" for="Occupation-Craft">Craft and Related Trade Workers</label>
+                            </div>
+                            <div class="q-box__question">
+                                @Html.RadioButtonFor(m => m.Occupation, "Plant and Machine Operators and Assemblers", new { @class = "form-check-input question__input", required = "required", id = "Occupation-Plant" })
+                                <label class="form-check-label question__label" for="Occupation-Plant">Plant and Machine Operators and Assemblers</label>
+                            </div>
+                            <div class="q-box__question">
+                                @Html.RadioButtonFor(m => m.Occupation, "Elementary Occupations", new { @class = "form-check-input question__input", required = "required", id = "Occupation-Elementary" })
+                                <label class="form-check-label question__label" for="Occupation-Elementary">Elementary Occupations</label>
+                            </div>
+                            <div class="q-box__question">
+                                @Html.RadioButtonFor(m => m.Occupation, "Armed Forces Occupations", new { @class = "form-check-input question__input", required = "required", id = "Occupation-Armed" })
+                                <label class="form-check-label question__label" for="Occupation-Armed">Armed Forces Occupations</label>
+                            </div>
+                            <div class="q-box__question">
+                                @Html.RadioButtonFor(m => m.Occupation, "Other", new { @class = "form-check-input question__input", required = "required", id = "Occupation-Other", onclick = "toggleOccupationOtherField();" })
+                                <label class="form-check-label question__label" for="Occupation-Other">Other</label>
+                                <input type="text" class="form-control mt-2" id="Occupation-Other-Text" placeholder="Please specify" disabled>
+                                <input type="hidden" id="occupationInput" name="Occupation" />
+                            </div>
+
+
+                   
+                        <span asp-validation-for="Occupation" class="text-danger"></span>
+                    </div>
+
+                            <!-- 6th Organization & ID Ref No. -->
+                            <div class="step">
+                                <h4>Organization Information:</h4>
+                                <div class="row g-2">
+                                    <!-- Organization Affiliated -->
+                                    <div class="q-box__question col-lg-6">
+                                        <label for="" asp-for="OrganizationAffiliated" class="form-label fw-semibold">Organization Affiliated:&nbsp; </label>
+                                        <input type="text" asp-for="OrganizationAffiliated" class="form-control"  required>
+                                        <span asp-validation-for="OrganizationAffiliated" class="text-danger"></span>
+                                    </div>
+                                    <!-- Contact Person -->
+                                    <div class="q-box__question col-lg-6">
+                                        <label for="" asp-for="ContactPerson" class="form-label fw-semibold">Contact Person:&nbsp; </label>
+                                        <input type="text" asp-for="ContactPerson" class="form-control" required>
+                                        <span asp-validation-for="ContactPerson" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="row g-2">
+                                    <!-- Office Address -->
+                                    <div class="q-box__question col-lg-6">
+                                        <label for="" asp-for="OfficeAddress" class="form-label fw-semibold">Office Address:&nbsp; </label>
+                                        <input type="text" asp-for="OfficeAddress" class="form-control"  required>
+                                        <span asp-validation-for="OfficeAddress" class="text-danger"></span>
+                                    </div>
+                                    <!-- Tel. Nos. -->
+                                    <div class="q-box__question col-lg-6">
+                                        <label for="" asp-for="OfficeTelNo" class="form-label fw-semibold">Tel. Nos.:&nbsp; </label>
+                                    <input type="text" asp-for="OfficeTelNo" class="form-control" required>
+                                        <span asp-validation-for="OfficeTelNo" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <!-- ID Reference No. -->
+                                <h4 class="mt-2">ID Reference No.</h4>
+                                <!-- SSS No. -->
+                                <div class="row">
+                                    <div class="q-box__question col-lg-4">
+                                        <label for="" asp-for="SSSNo" class="form-label fw-semibold">SSS NO.:&nbsp; </label>
+                                    <input type="text" asp-for="SSSNo" class="form-control" required>
+                                        <span asp-validation-for="SSSNo" class="text-danger"></span>
+                                    </div>
+                                    <!-- GSISNo. -->
+                                    <div class="q-box__question col-lg-4">
+                                        <label for="" asp-for="GSISNo" class="form-label fw-semibold">GSIS NO.:&nbsp; </label>
+                                    <input type="text" asp-for="GSISNo" class="form-control" required>
+                                        <span asp-validation-for="GSISNo" class="text-danger"></span>
+                                    </div>
+                                    <!-- PagIBIGNo -->
+                                    <div class="q-box__question col-lg-4">
+                                        <label for="" asp-for="PagIBIGNo" class="form-label fw-semibold">PAG-IBIG NO.:&nbsp; </label>
+                                    <input type="text" asp-for="PagIBIGNo" class="form-control" required>
+                                        <span asp-validation-for="PagIBIGNo" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row g-2">
+                                    <!-- PSNNo -->
+                                    <div class="q-box__question col-lg-6">
+                                        <label for="" asp-for="PSNNo" class="form-label fw-semibold">PSN No.:&nbsp; </label>
+                                    <input type="text" asp-for="PSNNo" class="form-control" required>
+                                        <span asp-validation-for="PSNNo" class="text-danger"></span>
+                                    </div>
+                                    <!-- PhilHealthNo. -->
+                                    <div class="q-box__question col-lg-6">
+                                        <label for="" asp-for="PhilHealthNo" class="form-label fw-semibold">PhilHealth NO.:&nbsp; </label>
+                                    <input type="text" asp-for="PhilHealthNo" class="form-control" required>
+                                        <span asp-validation-for="PhilHealthNo" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <!-- Accomplish By -->
+                                <h4>Accomplish By:</h4>
+                                <div class="q-box__question ">
+                                    <label for="" asp-for="AccomplishByLastName" class="form-label fw-semibold">Last Name:&nbsp; </label>
+                                    <input type="text" asp-for="AccomplishByLastName" class="form-control"  required>
+                                    <span asp-validation-for="AccomplishByLastName" class="text-danger"></span>
+                                </div>
+                                <div class="q-box__question">
+                                    <label for="" asp-for="AccomplishByFirstName" class="form-label fw-semibold">First Name:&nbsp; </label>
+                                    <input type="text" asp-for="AccomplishByFirstName" class="form-control"  required>
+                                    <span asp-validation-for="AccomplishByFirstName" class="text-danger"></span>
+                                </div>
+                                <div class="q-box__question">
+                                    <label for="" asp-for="AccomplishByMiddleName" class="form-label fw-semibold">Middle Name:&nbsp; </label>
+                                    <input type="text" asp-for="AccomplishByMiddleName" class="form-control"  required>
+                                    <span asp-validation-for="AccomplishByMiddleName" class="text-danger"></span>
+                                </div>
+                                
+                            </div>
+
+                            <!-- Closing Remarks -->
+                            <div class="step">
+                                <div class="mt-1">
+                                    <div class="closing-text">
+                                        <h4>That's about it! Thank you for Registering!</h4>
+                                        <p>We will assess your information and will E-mail you for your account details.</p>
+                                        <p>Click on the submit button to continue.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Success Confirmation -->
+                            <div id="success">
+                                <div class="mt-5">
+                                    <h4>Success! We'll get back to you ASAP!</h4>
+                                    <p>Meanwhile, check your E-mail for instructions.</p>
+                                    <a class="back-link" href="">You will be redirected to Home Page ➜</a>
+                                </div>
+                            </div>
+                        <div id="q-box__buttons">
+                            <button id="prev-btn" type="button">Previous</button>
+                            <button id="next-btn" type="button">Next</button>
+                            <button id="submit-btn" type="submit">Submit</button>
+                        </div>
+                        </div>
+                    </form>
+                </div>
+      </div>
+</div>
+</div>
+

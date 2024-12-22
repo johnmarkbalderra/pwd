@@ -1,0 +1,321 @@
+﻿@model IEnumerable<PWD_DSWD_SPC.Models.Registered.Account>
+
+@{
+    ViewBag.Title = "Archived Accounts";
+    Layout = "~/Views/Admin/Admin_Layout.cshtml";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<h3 class="text-dark mb-0" style="padding-top: 20px;">Archived Accounts</h3>
+<div class="d-flex justify-content-end mb-3">
+    <input type="text" id="searchInput" class="form-control me-2" placeholder="Search..." style="width: 200px;" onkeyup="searchTable()">
+    <select id="sortSelect" class="form-control" style="width:200px;" onchange="handleSort()">
+        <option value="" disabled selected>Sort by</option>
+        <option value="4">Barangay</option>
+        <option value="1">Name</option>
+        <option value="7">Date Applied</option>
+        <option value="2">Sex</option>
+    </select>
+</div>
+<div class="table-responsive table-scrollable">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>Sex</th>
+                <th>Contact No.</th>
+                <th>Barangay</th>
+                <th>Type of Disability</th>
+                <th>ID Number</th>
+                <th>Date Applied</th>
+                <th>Status</th>
+                <th>Action</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                int index = 1;
+                foreach (var account in Model)
+                {
+                    <tr>
+                        <td>@index</td>
+                        <td>@account.LastName, @account.FirstName @account.MiddleName</td>
+                        <td>@account.Gender</td>
+                        <td>@account.MobileNo</td>
+                        <td>@account.Barangay</td>
+                        <td>@account.TypeOfDisability</td>
+                        <td>@account.DisabilityNumber</td>
+                        <td>@account.CreatedAt.ToString("MM/dd/yyyy")</td>
+                        <td>@account.Status.Status</td>
+                        <td>
+                            @* view details *@
+                            <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ViewDetails-@account.Id" onclick="loadDetails('@Url.Action("Details","Applicant", new { id = account.Id })')"><i class="fas fa-user-circle"></i></button>
+                            @* restore *@
+                            <form asp-action="Restore" method="post" id="restore-form-@account.Id" style="display:inline;">
+                                <input type="hidden" name="id" value="@account.Id" />
+                                <button class="btn btn-outline-success btn-sm restore-button" type="button" data-id="@account.Id">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                            </form>
+
+                            <script>
+                                document.querySelectorAll('.restore-button').forEach(button => {
+                                    button.addEventListener('click', function () {
+                                        const formId = restore-form-${this.dataset.id};
+                                        Swal.fire({
+                                            title: 'Are you sure?',
+                                            text: "You are about to restore this account.",
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'Yes, restore it!'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                document.getElementById(formId).submit();
+                                            }
+                                        });
+                                    });
+                                });
+
+                                // Display SweetAlert for success or error messages
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const restoreSuccess = '@TempData["RestoreSuccess"]';
+                                    const restoreError = '@TempData["RestoreError"]';
+
+                                    if (restoreSuccess) {
+                                        Swal.fire({
+                                            title: 'Success!',
+                                            text: restoreSuccess,
+                                            icon: 'success',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+
+                                    if (restoreError) {
+                                        Swal.fire({
+                                            title: 'Error!',
+                                            text: restoreError,
+                                            icon: 'error',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+                                });
+                            </script>
+
+                        </td>
+                    </tr>
+                    index++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="11" class="text-center">No archived accounts found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script src="~/ADMIN-ASSET/js/table-feature.js"></script>
+
+<!-- View Details Modal -->
+@foreach (var account in Model)
+{
+    <div class="modal fade" role="dialog" tabindex="-1" id="ViewDetails-@account.Id">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#0B2271">
+                    <h4 class="modal-title" style="color:white">Full Details</h4>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @* type of app *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Type of Applicant:</strong> @account.ApplicantType
+                    </div> <hr />
+                    @* person with dis no. *@
+                    @if (account.ApplicantType == "Renewal")
+                    {
+                        <div class="form-group">
+                            <label for="pwdNumber">PWD Number:</label>
+                            <input type="text" class="form-control" style="border:none" value="@account.DisabilityNumber" readonly />
+                        </div>
+                    }
+
+                    @* date applied *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Date Applied:</strong> @account.CreatedAt
+                    </div> <hr />
+
+                    @* Personal Info *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong style="font-size:22px;">Personal Information</strong>
+                    </div>
+                    @* Fathers Name *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Father's Name:</strong> @account.FatherLastName,@account.FatherFirstName
+                    </div>
+                    @* Mothers Name *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Mother's Name:</strong> @account.MotherLastName,@account.MotherFirstName
+                    </div>
+                    @* Guardian Name *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Guardian's Name:</strong> @account.GuardianLastName,@account.GuardianFirstName
+                    </div><hr />
+
+                    @* Type of Dis *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Type of Disability:</strong> @account.TypeOfDisability
+                    </div><hr />
+
+                    @* Cause of Dis *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Cause of Disability:</strong> @account.CauseOfDisability
+                    </div><hr />
+
+                    @* Residence Add *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong style="font-size:22px;">Residence Address</strong>
+                    </div>
+                    @* House No & Street *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>House No. and Street:</strong> @account.HouseNoAndStreet
+                    </div>
+                    @* Barangay *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Barangay:</strong> @account.Barangay
+                    </div>
+                    @* Municipality *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Municipality:</strong> @account.Municipality
+                    </div>
+                    @* Region *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Region:</strong> @account.Region
+                    </div><hr />
+
+                    @* Contact Details *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong style="font-size:22px;">Contact Details</strong>
+                    </div>
+                    @* Landline No *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+                        <strong>Landline No.:</strong> @account.LandlineNo
+                    </div>
+                    @* Mobile No *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Mobile No.:</strong> @account.MobileNo
+                    </div>
+                    @* Email Address *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Email Address:</strong> @account.EmailAddress
+                    </div><hr />
+
+                    @* Educ Attain *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Educational Attainment:</strong> @account.EducationalAttainment
+                    </div><hr />
+
+                    @* Status Employ *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Status of Employment:</strong> @account.StatusOfEmployment
+                    </div><hr />
+
+                    @* Category Employ *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Category of Employment:</strong> @account.CategoryOfEmployment
+                    </div><hr />
+
+                    @* Type of Employ *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Type of Employment:</strong> @account.TypeOfEmployment
+                    </div><hr />
+
+                    @* Occupation *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Occupation:</strong>
+                        @if (account.Occupation == "Other" && !string.IsNullOrWhiteSpace(account.OtherOccupation))
+                        {
+                            @account.OtherOccupation
+                        }
+                        else
+                        {
+                            @account.Occupation
+                        }
+                    </div><hr />
+
+                    @* Org Info *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong style="font-size:22px;">Organization Information:</strong>
+                    </div>
+                    @* Org Affiliated *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Organization Affiliated:</strong> @account.OrganizationAffiliated
+                    </div><hr />
+                    @* Contact Person *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Contact Person:</strong> @account.ContactPerson
+                    </div><hr />
+                    @* Office Add *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Office Address:</strong> @account.OfficeAddress
+                    </div><hr />
+                    @* Tel. Nos *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+                        <strong>Tel. Nos:</strong> @account.OfficeTelNo
+                    </div><hr />
+
+                    @* Id Ref No. *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong style="font-size:22px;">ID Reference No.:</strong>
+                    </div>
+                    @* SSS No *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>SSS No.:</strong> @account.SSSNo
+                    </div>
+                    @* GSIS No *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>GSIS No.:</strong> @account.GSISNo
+                    </div>
+                    @* Pagibig No *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>PAG-IBIG No.:</strong> @account.PagIBIGNo
+                    </div>
+                    @* PSN No *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>PSN No.:</strong> @account.PSNNo
+                    </div>
+                    @* PhilHealth No *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>PhilHealth No.:</strong> @account.PhilHealthNo
+                    </div><hr />
+
+                    @* Accomplish By *@
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong style="font-size:22px;">Accomplish By:</strong>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Last Name:</strong> @account.AccomplishByLastName
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>First Name:</strong> @account.AccomplishByFirstName
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong>Middle Name:</strong> @account.AccomplishByMiddleName
+                    </div><hr />
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+

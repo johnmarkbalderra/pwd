@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Accredited Establishment";
+    Layout = "~/Views/User/User_Layout.cshtml";
+}
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+</head>
+<!-- ========================= Main (CONTENT) ==================== -->
+<div class="main">
+    <div class="topbar">
+        <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+        </div>
+
+
+
+        @* user profile *@
+        <div class="user">
+            <a href="@Url.Action("AccountSetting", "User")">
+                <ion-icon name="person-outline" style="color: #0b2271;"></ion-icon>
+            </a>
+        </div>
+    </div>
+
+    <!-- ================= Accredited Establishment ================ -->
+    <div class="container my-5">
+        <div class="card shadow border-0 rounded-3">
+            <div class="card-header bg-white border-0">
+                <!-- Removed border -->
+                <h2 class="p-3" style="color: #0b2271;">Accredited Establishment</h2>
+            </div>
+            <div class="card-body pt-3 pb-3 table-responsive">
+                <table class="table table-borderless table-hover">
+                    <tbody>
+                        @foreach (var qrCode in Model)
+                        {
+                            <tr class="mb-3">
+                                <td width="60px">
+                                    <div class="rounded-circle overflow-hidden" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-store fa-2x" style="color: #0B2271;"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <h6 class="mb-0">@qrCode.EstablishmentName - @qrCode.Branch</h6>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</div>

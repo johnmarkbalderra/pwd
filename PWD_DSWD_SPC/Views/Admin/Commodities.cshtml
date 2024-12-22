@@ -1,0 +1,165 @@
+﻿@model IEnumerable<dynamic>
+@{
+    ViewBag.Title = "Commodities";
+    Layout = "~/Views/Admin/Admin_Layout.cshtml";
+}
+
+<h3 class="text-dark mb-0" style="padding-top: 20px;">
+    Commodities&nbsp;<em><span style="color: rgb(255, 0, 0);">(Balance limit per week -&nbsp;₱2,500.00)</span></em>
+</h3>
+
+<div class="table-responsive">
+    <table class="table table-striped" id="tab">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>PWD No.</th>
+                <th>View Purchases</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Select((u, index) => new { u, index }))
+            {
+                <tr>
+                    <td>@(user.index + 1)</td>
+                    <td>@user.u.Name</td>
+                    <td>@user.u.PwdNo</td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#viewPurchased"
+                                data-user-id="@user.u.AccountId">
+                            View Purchases
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Purchases Modal -->
+<div class="modal fade" id="viewPurchased" tabindex="-1" aria-labelledby="viewPurchasedLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#0B2271">
+                <h5 class="modal-title" style="color:white">Purchases</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table" id="purchasesTable">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Date of Purchase</th>
+                                <th>Establishment</th>
+                                <th>Total Price</th>
+                                <th>Discounted Price</th>
+                                <th>Available Balance</th>
+                                <th>View Items</th>
+                            </tr>
+                        </thead>
+                        <tbody id="purchasesTableBody">
+                            <!-- Purchase data will be injected here via AJAX -->
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Items Modal -->
+<div class="modal fade" id="viewItemsModal" tabindex="-1" aria-labelledby="viewItemsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#0B2271">
+                <h5 class="modal-title" style="color:white">Items Purchased</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table" id="itemsTable">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total Price</th>
+                                <th>Discounted Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                            <!-- Item data will be injected here via AJAX -->
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Fetch transactions for a user
+    $('#viewPurchased').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var userId = button.data('user-id');
+
+        // Fetch transaction data
+        $.ajax({
+            url: '@Url.Action("GetTransactionsForUser", "Admin")',
+            type: 'GET',
+            data: { userId: userId },
+            success: function (transactions) {
+                var purchasesTableBody = '';
+                transactions.forEach((transaction, index) => {
+                    purchasesTableBody += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${new Date(transaction.createdDate).toLocaleDateString()}</td>
+                                <td>${transaction.establishmentName}</td>
+                                <td>${transaction.totalPrice.toFixed(2)}</td>
+                                <td>${transaction.discountedPrice.toFixed(2)}</td>
+                                <td>${transaction.remainingDiscount.toFixed(2)}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="showItems('${transaction.transactionId}')">
+                                        View Items
+                                    </button>
+                                </td>
+                            </tr>`;
+                });
+                $('#purchasesTableBody').html(purchasesTableBody);
+            }
+        });
+    });
+
+    // Fetch items for a transaction
+    function showItems(transactionId) {
+        $.ajax({
+            url: '@Url.Action("GetItemsForTransaction", "Admin")',
+            type: 'GET',
+            data: { transactionId: transactionId },
+            success: function (items) {
+                var itemsTableBody = '';
+                items.forEach(item => {
+                    itemsTableBody += `
+                            <tr>
+                                <td>${item.description}</td>
+                                <td>${item.quantity}</td>
+                                <td>${item.price.toFixed(2)}</td>
+                                <td>${item.totalPrice.toFixed(2)}</td>
+                                <td>${item.discountedPrice.toFixed(2)}</td>
+                            </tr>`;
+                });
+                $('#itemsTableBody').html(itemsTableBody);
+                $('#viewItemsModal').modal('show');
+            }
+        });
+    }
+</script>
