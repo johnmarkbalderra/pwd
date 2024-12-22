@@ -577,81 +577,72 @@ namespace PWD_DSWD_SPC.Controllers.Admin
         }
 
          [HttpPost]
- public async Task<IActionResult> QR(QrCode model)
- {
-     if (model == null || string.IsNullOrEmpty(model.EstablishmentName))
-     {
-         ModelState.AddModelError("EstablishmentName", "Establishment Name cannot be empty.");
-         return View(model);
-     }
+        public async Task<IActionResult> QR(QrCode model)
+        {
+            if (model == null || string.IsNullOrEmpty(model.EstablishmentName))
+            {
+                ModelState.AddModelError("EstablishmentName", "Establishment Name cannot be empty.");
+                return View(model);
+            }
 
-     string qrContent;
+            string qrContent;
 
-     // Determine the QR content based on the type of QR code
-     if (model.TypeOfQRCode == "Commodities")
-     {
-         qrContent = $"{_baseCommoditiesUrl}?establishment={Uri.EscapeDataString(model.EstablishmentName)}&branch={Uri.EscapeDataString(model.Branch)}";
-     }
-     else if (model.TypeOfQRCode == "Medicine")
-     {
-         qrContent = $"{_baseMedicineUrl}?establishment={Uri.EscapeDataString(model.EstablishmentName)}&branch={Uri.EscapeDataString(model.Branch)}";
-     }
-     else if (model.TypeOfQRCode == "Both")
-     {
-         // Prepare the combined content for both QR codes
-         var combinedContent = new
-         {
-             CommoditiesUrl = $"{_baseCommoditiesUrl}?establishment={Uri.EscapeDataString(model.EstablishmentName)}&branch={Uri.EscapeDataString(model.Branch)}",
-             MedicineUrl = $"{_baseMedicineUrl}?establishment={Uri.EscapeDataString(model.EstablishmentName)}&branch={Uri.EscapeDataString(model.Branch)}",
-             Establishment = model.EstablishmentName,
-             Branch = model.Branch
-         };
+            // Determine the QR content based on the type of QR code
+            if (model.TypeOfQRCode == "Commodities")
+            {
+                qrContent = $"{_baseCommoditiesUrl}?establishment={model.EstablishmentName}&branch={model.Branch}";
+            }
+            else if (model.TypeOfQRCode == "Medicine")
+            {
+                qrContent = $"{_baseMedicineUrl}?establishment={model.EstablishmentName}&branch={model.Branch}";
+            }
+            else if (model.TypeOfQRCode == "Both")
+            {
+                var combinedContent = new
+                {
+                    CommoditiesUrl = $"{_baseCommoditiesUrl}?establishment={model.EstablishmentName}&branch={model.Branch}",
+                    MedicineUrl = $"{_baseMedicineUrl}?establishment={model.EstablishmentName}&branch={model.Branch}",
+                    Establishment = model.EstablishmentName,
+                    Branch = model.Branch
+                };
 
-         // Serialize combined content to JSON
-         qrContent = JsonSerializer.Serialize(combinedContent);
+                qrContent = JsonSerializer.Serialize(combinedContent);
+            }
+            else
+            {
+                ModelState.AddModelError("", "Invalid QR Code Type.");
+                return View(model);
+            }
 
-         // Check the length of the serialized content
-         if (qrContent.Length > 2953) // 2953 is the max for alphanumeric QR codes
-         {
-             ModelState.AddModelError("", "The generated QR code content is too long.");
-             return View(model);
-         }
-     }
-     else
-     {
-         ModelState.AddModelError("", "Invalid QR Code Type.");
-         return View(model);
-     }
+            // Generate QR Code
+            using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+            {
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
+                using (PngByteQRCode qrCode = new PngByteQRCode(qrCodeData))
+                {
+                    byte[] qrCodeBytes = qrCode.GetGraphic(7);
+                    string qrCodeBase64 = Convert.ToBase64String(qrCodeBytes);
+                    string qrCodeUri = $"data:image/png;base64,{qrCodeBase64}";
 
-     // Generate QR Code
-     using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
-     {
-         QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
-         using (PngByteQRCode qrCode = new PngByteQRCode(qrCodeData))
-         {
-             byte[] qrCodeBytes = qrCode.GetGraphic(7);
-             string qrCodeBase64 = Convert.ToBase64String(qrCodeBytes);
-             string qrCodeUri = $"data:image/png;base64,{qrCodeBase64}";
+                    // Save to database
+                    var qrCodeEntity = new QrCode
+                    {
+                        EstablishmentName = model.EstablishmentName,
+                        Branch = model.Branch,
+                        TypeOfQRCode = model.TypeOfQRCode,
+                        QrCodeBase64 = qrCodeBase64,
+                        RegistrationUrl = qrContent
+                    };
 
-             // Save to database
-             var qrCodeEntity = new QrCode
-             {
-                 EstablishmentName = model.EstablishmentName,
-                 Branch = model.Branch,
-                 TypeOfQRCode = model.TypeOfQRCode,
-                 QrCodeBase64 = qrCodeBase64,
-                 RegistrationUrl = qrContent
-             };
+                    await _registerDbContext.QrCodes.AddAsync(qrCodeEntity);
+                    await _registerDbContext.SaveChangesAsync();
 
-             await _registerDbContext.QrCodes.AddAsync(qrCodeEntity);
-             await _registerDbContext.SaveChangesAsync();
+                    ViewBag.QrCodeUri = qrCodeUri;
+                }
+            }
 
-             ViewBag.QrCodeUri = qrCodeUri;
-         }
-     }
-
-     return View(model);
- }
+            return View(model);
+        }
 
         public ActionResult Commodities()
         {
