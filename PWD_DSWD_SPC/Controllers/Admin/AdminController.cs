@@ -21,8 +21,8 @@ namespace PWD_DSWD_SPC.Controllers.Admin
         private readonly IEmailService _emailService;
 
         // Base URLs for QR Code generation
-        private readonly string _baseCommoditiesUrl = "https://localhost:7153/User/Commodities"; // Update with your actual URL
-        private readonly string _baseMedicineUrl = "https://localhost:7153/User/Medicine"; // Update with your actual URL
+        private readonly string _baseCommoditiesUrl = "https://pwdhealthservices.azurewebsites.net/User/Commodities"; // Update with your actual URL
+        private readonly string _baseMedicineUrl = "https://pwdhealthservices.azurewebsites.net/User/Medicine"; // Update with your actual URL
 
         // Constructor with dependency injection
         public AdminController(RegisterDbContext registerDbContext, ILogger<AdminController> logger, IEmailService emailService)
