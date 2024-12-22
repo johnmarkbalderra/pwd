@@ -94,13 +94,6 @@ namespace PWD_DSWD.Controllers
                 return View(); // Return to the login view with an error
             }
 
-            // Check if the user's status is Deceased or Change of Residency
-            if (user.Accounts != null && !string.IsNullOrEmpty(user.Accounts.Status.Status) &&
-                (user.Accounts.Status.Status == "Deceased" || user.Accounts.Status.Status == "Change of Residency"))
-            {
-                ModelState.AddModelError("", "Your account is inactive due to your status.");
-                return View(); // Return to the login view with an error
-            }
 
             // Check if the password is valid
             if (VerifyPassword(password, user.Password))
