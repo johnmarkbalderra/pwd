@@ -43,91 +43,72 @@ namespace PWD_DSWD.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Login(string username, string password)
-        {
-            // Validate input
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-            {
-                ModelState.AddModelError("", "Username and password are required.");
-                return View();
-            }
-        
-            // Check for default admin credentials first
-            if (username == "Admin" && password == "Admin123")
-            {
-                // Store admin details in session
-                HttpContext.Session.SetString("Username", "Admin");
-                HttpContext.Session.SetString("Role", "Admin");
-        
-                // Redirect to admin dashboard
-                return RedirectToAction("Admin", "Admin");
-            }
-        
-            // Check in the database for admin credentials
-            var admin = _registerDbContext.AdminCredential.SingleOrDefault(a => a.Username == username);
-        
-            if (admin != null && VerifyPassword(password, admin.Password))
-            {
-                // Store admin details in session
-                HttpContext.Session.SetString("Username", admin.Username);
-                HttpContext.Session.SetString("Role", "Admin");
-        
-                // Redirect to admin dashboard
-                return RedirectToAction("Admin", "Admin");
-            }
-        
-            // Check user credentials and include related ApprovalStatus and Account details
-            var user = _registerDbContext.UserCredential
-                .Include(u => u.Accounts) // Include account details
-                .ThenInclude(a => a.ApprovalStatus) // Include approval status details
-                .SingleOrDefault(u => u.Username == username);
-        
-            if (user == null)
-            {
-                ModelState.AddModelError("", "User not found.");
-                return View();
-            }
-        
-            // Check if the associated account is expired
-            if (user.Accounts != null && user.Accounts.IsExpired)
-            {
-                ModelState.AddModelError("", "Your account is expired. Please renew your account.");
-                return View();
-            }
-        
-            // Check ApprovalStatus if associated
-            if (user.Accounts != null && user.Accounts.ApprovalStatus != null)
-            {
-                var status = user.Accounts.ApprovalStatus.Status;
-        
-                if (status == "Deceased" || status == "Change of Residency")
+                public IActionResult Login(string username, string password)
                 {
-                    ModelState.AddModelError("", "Your account is inactive due to your status.");
+                    // Validate input
+                    if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                    {
+                        ModelState.AddModelError("", "Username and password are required.");
+                        return View();
+                    }
+                
+                    // Check for default admin credentials first
+                    if (username == "Admin" && password == "Admin123")
+                    {
+                        // Store admin details in session
+                        HttpContext.Session.SetString("Username", "Admin");
+                        HttpContext.Session.SetString("Role", "Admin");
+                
+                        // Redirect to admin dashboard
+                        return RedirectToAction("Admin", "Admin");
+                    }
+                
+                    // Check in the database for admin credentials
+                    var admin = _registerDbContext.AdminCredential.SingleOrDefault(a => a.Username == username);
+                
+                    if (admin != null && VerifyPassword(password, admin.Password))
+                    {
+                        // Store admin details in session
+                        HttpContext.Session.SetString("Username", admin.Username);
+                        HttpContext.Session.SetString("Role", "Admin");
+                
+                        // Redirect to admin dashboard
+                        return RedirectToAction("Admin", "Admin");
+                    }
+                
+                    // Check user credentials
+                    var user = _registerDbContext.UserCredential
+                        .Include(u => u.Accounts) // Include related account details
+                        .SingleOrDefault(u => u.Username == username);
+                
+                    if (user == null)
+                    {
+                        ModelState.AddModelError("", "User not found.");
+                        return View();
+                    }
+                
+                    // Check if the associated account is expired
+                    if (user.Accounts != null && user.Accounts.IsExpired)
+                    {
+                        ModelState.AddModelError("", "Your account is expired. Please renew your account.");
+                        return View(); // Return to the login view with an error
+                    }
+                
+                    // Check if the password is valid
+                    if (VerifyPassword(password, user.Password))
+                    {
+                        // Store user details in session
+                        HttpContext.Session.SetString("Username", user.Username);
+                        HttpContext.Session.SetString("Role", user.Role);
+                
+                        // Redirect to user dashboard
+                        return RedirectToAction("UserDash", "User");
+                    }
+                
+                    // Invalid login attempt
+                    ModelState.AddModelError("", "Invalid login attempt.");
                     return View();
                 }
-        
-                if (!user.Accounts.ApprovalStatus.IsApproved)
-                {
-                    ModelState.AddModelError("", "Your account is not approved yet. Please complete the required documents.");
-                    return View();
-                }
-            }
-        
-            // Check if the password is valid
-            if (VerifyPassword(password, user.Password))
-            {
-                // Store user details in session
-                HttpContext.Session.SetString("Username", user.Username);
-                HttpContext.Session.SetString("Role", user.Role);
-        
-                // Redirect to user dashboard
-                return RedirectToAction("UserDash", "User");
-            }
-        
-            // Invalid login attempt
-            ModelState.AddModelError("", "Invalid login attempt.");
-            return View();
-        }
 
         // Method to verify the password (example)
         private bool VerifyPassword(string inputPassword, string storedPasswordHash)
