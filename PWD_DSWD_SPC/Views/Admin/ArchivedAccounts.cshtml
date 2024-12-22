@@ -53,18 +53,17 @@
                         <td>
                             @* view details *@
                             <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ViewDetails-@account.Id" onclick="loadDetails('@Url.Action("Details","Applicant", new { id = account.Id })')"><i class="fas fa-user-circle"></i></button>
-                            @* restore *@
                             <form asp-action="Restore" method="post" id="restore-form-@account.Id" style="display:inline;">
-                                <input type="hidden" name="id" value="@account.Id" />
-                                <button class="btn btn-outline-success btn-sm restore-button" type="button" data-id="@account.Id">
-                                    <i class="fas fa-undo"></i>
-                                </button>
-                            </form>
-
-                            <script>
-                                document.querySelectorAll('.restore-button').forEach(button => {
+                            <input type="hidden" name="id" value="@account.Id" />
+                            <button class="btn btn-outline-success btn-sm restore-button" type="button" data-id="@account.Id">
+                                <i class="fas fa-undo"></i>
+                            </button>
+                        </form>
+                        
+                        <script>
+                            document.querySelectorAll('.restore-button').forEach(button => {
                                 button.addEventListener('click', function () {
-                                    const formId = `restore-form-${this.dataset.id}`; // Corrected line
+                                    const formId = `restore-form-${this.dataset.id}`; // Form ID reference
                                     Swal.fire({
                                         title: 'Are you sure?',
                                         text: "You are about to restore this account.",
@@ -75,36 +74,36 @@
                                         confirmButtonText: 'Yes, restore it!'
                                     }).then((result) => {
                                         if (result.isConfirmed) {
-                                            document.getElementById(formId).submit();
+                                            document.getElementById(formId).submit(); // Submit the form
                                         }
                                     });
                                 });
                             });
-
-                                // Display SweetAlert for success or error messages
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const restoreSuccess = '@TempData["RestoreSuccess"]';
-                                    const restoreError = '@TempData["RestoreError"]';
-
-                                    if (restoreSuccess) {
-                                        Swal.fire({
-                                            title: 'Success!',
-                                            text: restoreSuccess,
-                                            icon: 'success',
-                                            confirmButtonText: 'OK'
-                                        });
-                                    }
-
-                                    if (restoreError) {
-                                        Swal.fire({
-                                            title: 'Error!',
-                                            text: restoreError,
-                                            icon: 'error',
-                                            confirmButtonText: 'OK'
-                                        });
-                                    }
-                                });
-                            </script>
+                        
+                            // Handle SweetAlert messages
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const restoreSuccess = '@TempData["RestoreSuccess"]';
+                                const restoreError = '@TempData["RestoreError"]';
+                        
+                                if (restoreSuccess) {
+                                    Swal.fire({
+                                        title: 'Success!',
+                                        text: restoreSuccess,
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                        
+                                if (restoreError) {
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: restoreError,
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            });
+                        </script>
 
                         </td>
                     </tr>
