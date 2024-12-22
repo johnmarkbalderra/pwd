@@ -194,18 +194,6 @@ namespace PWD_DSWD_SPC.Controllers.Admin
             ViewBag.TotalReports = reports.Count;
             ViewBag.Reports = reports;
 
-            // Count users for each disability type
-              var disabilityCounts = _registerDbContext.Accounts
-                  .GroupBy(a => a.TypeOfDisability)
-                  .Select(g => new
-                  {
-                      DisabilityType = g.Key,
-                      Count = g.Count()
-                  })
-                  .ToList();
-            
-              // Pass the disability data to the view
-              ViewBag.DisabilityCounts = disabilityCounts;
 
             return View();
         }
