@@ -33,7 +33,7 @@ namespace PWD_DSWD_SPC.Controllers.Admin
         }
 
 
-        // Admin Dashboard View
+               // Admin Dashboard View
         public IActionResult Admin()
         {
             // Count the number of approved applicants
@@ -59,50 +59,49 @@ namespace PWD_DSWD_SPC.Controllers.Admin
             ViewBag.TotalPendingApplicants = totalPendingApplicants;
             ViewBag.TotalArchivedApplicants = totalArchivedApplicants;
 
+ //ESTABLISHMENT ANALYTICS
+ // Calculate Total Accredited Establishments (distinct QrCodeId count)
+ int totalAccreditedEstablishments = _registerDbContext.QrCodes
+     .Select(q => q.QrCodeId)
+     .Distinct()
+     .Count();
 
-            // Calculate Total Accredited Establishments (distinct QrCodeId count)
-            int totalAccreditedEstablishments = _registerDbContext.QrCodes
-                .Select(q => q.QrCodeId)
-                .Distinct()
-                .Count();
-
-            ViewBag.TotalAccreditedEstablishments = totalAccreditedEstablishments;
+ ViewBag.TotalAccreditedEstablishments = totalAccreditedEstablishments;
 
 
             // Fetch total visits based on date of transaction for Medicine and Commodity
-            // Get the date 30 days ago from today
             var startDate = DateTime.UtcNow.AddDays(-30);
-            var endDate = DateTime.UtcNow.Date; // The current date (end of the range)
+            var endDate = DateTime.UtcNow.Date;
 
+            // Fetch visits for Commodity Transactions
             var totalVisitsQuery = _registerDbContext.CommodityTransactions
-                .Where(c => c.CreatedDate.Date >= startDate && c.CreatedDate.Date <= endDate) // Filter by today's date for example
+                .Where(c => c.CreatedDate.Date >= startDate && c.CreatedDate.Date <= endDate)
                 .GroupBy(c => new { c.EstablishmentName, c.BranchName })
                 .Select(g => new
                 {
                     EstablishmentName = g.Key.EstablishmentName,
                     BranchName = g.Key.BranchName,
-                    TotalVisits = g.Count() // Count the number of transactions (visits)
+                    TotalVisits = g.Count()
                 })
                 .ToList();
 
-            // Similarly, if you need to include Medicine Transactions, you can fetch and count those
-            // Query for Medicine Transaction Ledgers (count visits based on Ledger and date of MedicineTransaction)
+            // Similarly, fetch visits for Medicine Transactions
             var totalMedicineVisits = _registerDbContext.MedicineTransactionLedgers
                 .Where(ledger => ledger.Transactions
-                    .Any(medTransaction => medTransaction.DatePurchased.Date >= startDate && medTransaction.DatePurchased.Date <= endDate)) // Filter based on date
+                    .Any(medTransaction => medTransaction.DatePurchased.Date >= startDate && medTransaction.DatePurchased.Date <= endDate))
                 .GroupBy(ledger => new {
-                    EstablishmentName = ledger.Transactions.First().EstablishmentName, // Get EstablishmentName from the first transaction
-                    BranchName = ledger.Transactions.First().Branch // Get Branch from the first transaction
+                    EstablishmentName = ledger.Transactions.First().EstablishmentName,
+                    BranchName = ledger.Transactions.First().Branch
                 })
                 .Select(g => new
                 {
                     EstablishmentName = g.Key.EstablishmentName,
                     BranchName = g.Key.BranchName,
-                    TotalVisits = g.Count() // Count distinct ledger entries (representing a visit)
+                    TotalVisits = g.Count()
                 })
                 .ToList();
 
-            // Combine the results from Medicine and Commodity transactions
+            // Combine the results from both Commodity and Medicine transactions
             var combinedVisits = totalVisitsQuery
                 .Union(totalMedicineVisits)
                 .GroupBy(v => new { v.EstablishmentName, v.BranchName })
@@ -110,12 +109,28 @@ namespace PWD_DSWD_SPC.Controllers.Admin
                 {
                     EstablishmentName = g.Key.EstablishmentName,
                     BranchName = g.Key.BranchName,
-                    TotalVisits = g.Sum(v => v.TotalVisits) // Sum total visits from both categories
+                    TotalVisits = g.Sum(v => v.TotalVisits)
                 })
                 .ToList();
 
-            // Pass the total visits data to the view
-            ViewBag.TotalVisits = combinedVisits;
+            // Group by EstablishmentName and count the distinct branches
+            var establishments = combinedVisits
+                .GroupBy(v => v.EstablishmentName)
+                .Select(g => new
+                {
+                    EstablishmentName = g.Key,
+                    Branches = g.Select(b => new
+                    {
+                        BranchName = b.BranchName,
+                        TotalVisits = b.TotalVisits
+                    }).ToList(),
+                    TotalBranches = g.Select(b => b.BranchName).Distinct().Count() // Count distinct branches
+                })
+                .ToList();
+
+            // Pass the data to the view
+            ViewBag.TotalVisits = establishments;
+
 
 
 
@@ -195,7 +210,46 @@ namespace PWD_DSWD_SPC.Controllers.Admin
             ViewBag.Reports = reports;
 
 
+            // Count users for each disability type
+            var disabilityCounts = _registerDbContext.Accounts
+                .GroupBy(a => a.TypeOfDisability)
+                .Select(g => new
+                {
+                    DisabilityType = g.Key,
+                    Count = g.Count()
+                })
+                .ToList();
+
+            // Pass the disability data to the view
+            ViewBag.DisabilityCounts = disabilityCounts;
+
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult GetBranches(string establishmentName)
+        {
+            // Fetch distinct branches for the selected establishment from QrCodes
+            var branchData = _registerDbContext.QrCodes
+                .Where(q => q.EstablishmentName == establishmentName)
+                .GroupBy(q => q.Branch)
+                .Select(g => new
+                {
+                    BranchName = g.Key,
+                    Count = g.Count(),
+                    TotalVisits = _registerDbContext.CommodityTransactions
+                                    .Where(c => c.EstablishmentName == establishmentName && c.BranchName == g.Key)
+                                    .Count() +
+                                  _registerDbContext.MedicineTransactionLedgers
+                                    .Where(ledger => ledger.Transactions
+                                        .Any(medTransaction => medTransaction.EstablishmentName == establishmentName && medTransaction.Branch == g.Key))
+                                    .SelectMany(ledger => ledger.Transactions)
+                                    .Count()
+                })
+                .ToList();
+        
+            // Return only the necessary properties in a simple structure
+            return Json(branchData.Select(branch => new { branch.BranchName, branch.Count, branch.TotalVisits }));
         }
 
         [HttpGet]
