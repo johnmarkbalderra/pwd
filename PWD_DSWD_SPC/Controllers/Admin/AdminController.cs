@@ -669,6 +669,7 @@ namespace PWD_DSWD_SPC.Controllers.Admin
                     t.TransactionId,
                     CreatedDate = t.CreatedDate,
                     t.EstablishmentName,
+                    t.BranchName,
                     TotalPrice = t.Items.Sum(i => i.TotalPrice),
                     DiscountedPrice = t.Items.Sum(i => i.DiscountedPrice),
                     t.RemainingDiscount
