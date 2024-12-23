@@ -56,6 +56,7 @@
                                 <th>No.</th>
                                 <th>Date of Purchase</th>
                                 <th>Establishment</th>
+                                <th>Branch</th>
                                 <th>Total Price</th>
                                 <th>Discounted Price</th>
                                 <th>Available Balance</th>
@@ -124,6 +125,7 @@
                                 <td>${index + 1}</td>
                                 <td>${new Date(transaction.createdDate).toLocaleDateString()}</td>
                                 <td>${transaction.establishmentName}</td>
+                                <td>${transaction.branchName}</td>
                                 <td>${transaction.totalPrice.toFixed(2)}</td>
                                 <td>${transaction.discountedPrice.toFixed(2)}</td>
                                 <td>${transaction.remainingDiscount.toFixed(2)}</td>
