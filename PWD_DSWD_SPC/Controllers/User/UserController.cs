@@ -652,70 +652,70 @@ namespace PWD_DSWD_SPC.Controllers.User
         }
 
 
-        public IActionResult History()
-        {
-            var userAccountId = GetUserAccountId(); // Get the logged-in user's AccountId
+         public IActionResult History()
+ {
+     var userAccountId = GetUserAccountId(); // Get the logged-in user's AccountId
 
-            if (userAccountId == Guid.Empty)
-            {
-                return RedirectToAction("Login", "Account");
-            }
+     if (userAccountId == Guid.Empty)
+     {
+         return RedirectToAction("Login", "Account");
+     }
 
-            // Fetch commodity transactions
-            var transactions = _registerDbContext.CommodityTransactions
-                .Where(t => t.AccountId == userAccountId)
-                .Include(t => t.Items)
-                .OrderByDescending(t => t.CreatedDate)
-                .Select(t => new
-                {
-                    TransactionId = t.TransactionId.ToString(),
-                    CreatedDate = t.CreatedDate.ToString("yyyy-MM-dd"), // Format as string for display
-                    t.EstablishmentName,
-                    Branch = string.Empty, // Add Branch as an empty string for consistency
-                    PurchaseType = "Commodity",
-                    Items = t.Items.Select(i => new
-                    {
-                        Description = i.Description,
-                        Quantity = i.Quantity,
-                        Price = i.Price,
-                        TotalPrice = i.TotalPrice,
-                        DiscountedPrice = i.DiscountedPrice
-                    }).ToList()
-                })
-                .ToList();
+     // Fetch commodity transactions
+     var transactions = _registerDbContext.CommodityTransactions
+         .Where(t => t.AccountId == userAccountId)
+         .Include(t => t.Items)
+         .OrderByDescending(t => t.CreatedDate)
+         .Select(t => new
+         {
+             TransactionId = t.TransactionId.ToString(),
+             CreatedDate = t.CreatedDate.ToString("yyyy-MM-dd"), // Format as string for display
+             t.EstablishmentName,
+             Branch = t.BranchName, // Add Branch as an empty string for consistency
+             PurchaseType = "Commodity",
+             Items = t.Items.Select(i => new
+             {
+                 Description = i.Description,
+                 Quantity = i.Quantity,
+                 Price = i.Price,
+                 TotalPrice = i.TotalPrice,
+                 DiscountedPrice = i.DiscountedPrice
+             }).ToList()
+         })
+         .ToList();
 
-            // Fetch medicine transactions
-            var medicineTransactions = _registerDbContext.MedicineTransactions
-                .Where(m => m.AccountId == userAccountId)
-                .OrderByDescending(m => m.DatePurchased)
-                .Select(m => new
-                {
-                    TransactionId = m.MedTransactionId.ToString(),
-                    CreatedDate = m.DatePurchased.ToString("yyyy-MM-dd"),
-                    m.EstablishmentName,
-                    m.Branch,
-                    PurchaseType = "Medicine",
-                    Items = new[]
-                    {
-                new
-                {
-                    Description = m.MedicineName,
-                    Quantity = m.PurchasedQuantity,
-                    m.Price,
-                    m.TotalPrice,
-                    m.DiscountedPrice
-                }
-                    }.ToList() // Convert array to List for consistency
-                })
-                .ToList();
+     // Fetch medicine transactions
+     var medicineTransactions = _registerDbContext.MedicineTransactions
+         .Where(m => m.AccountId == userAccountId)
+         .OrderByDescending(m => m.DatePurchased)
+         .Select(m => new
+         {
+             TransactionId = m.MedTransactionId.ToString(),
+             CreatedDate = m.DatePurchased.ToString("yyyy-MM-dd"),
+             m.EstablishmentName,
+             Branch = m.Branch,
+             PurchaseType = "Medicine",
+             Items = new[]
+             {
+         new
+         {
+             Description = m.MedicineName,
+             Quantity = m.PurchasedQuantity,
+             m.Price,
+             m.TotalPrice,
+             m.DiscountedPrice
+         }
+             }.ToList() // Convert array to List for consistency
+         })
+         .ToList();
 
-            // Combine both transaction types
-            var allTransactions = transactions.Concat(medicineTransactions).OrderByDescending(t => t.CreatedDate).ToList();
+     // Combine both transaction types
+     var allTransactions = transactions.Concat(medicineTransactions).OrderByDescending(t => t.CreatedDate).ToList();
 
-            ViewBag.Transactions = Newtonsoft.Json.JsonConvert.SerializeObject(allTransactions);
+     ViewBag.Transactions = Newtonsoft.Json.JsonConvert.SerializeObject(allTransactions);
 
-            return View();
-        }
+     return View();
+ }
 
 
 
