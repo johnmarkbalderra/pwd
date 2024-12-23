@@ -212,13 +212,14 @@ namespace PWD_DSWD_SPC.Controllers.Admin
 
             // Count users for each disability type
             var disabilityCounts = _registerDbContext.Accounts
-                .GroupBy(a => a.TypeOfDisability)
-                .Select(g => new
-                {
-                    DisabilityType = g.Key,
-                    Count = g.Count()
-                })
-                .ToList();
+            .Where(a => a.TypeOfDisability != null) // Exclude null types
+            .GroupBy(a => a.TypeOfDisability)
+            .Select(g => new
+            {
+                DisabilityType = g.Key,
+                Count = g.Count()
+            })
+            .ToList();
 
             // Pass the disability data to the view
             ViewBag.DisabilityCounts = disabilityCounts;
