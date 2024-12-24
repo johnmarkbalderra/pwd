@@ -33,19 +33,19 @@ namespace PWD_DSWD_SPC.Controllers.Admin
         }
 
 
-               // Admin Dashboard View
+       // Admin Dashboard View
         public IActionResult Admin()
         {
             // Count the number of approved applicants
             int totalApprovedApplicants = _registerDbContext.Accounts
                 .Where(a => a.Status.Status == "Approved")
                 .Count();
-
+        
             // Count the number of pending applicants
             int totalPendingApplicants = _registerDbContext.Accounts
                 .Where(a => a.Status.Status == "Pending") // Adjust if needed
                 .Count();
-
+        
             // Count the number of archived applicants (Disapproved, Deceased, Change of Residency, Expired.)
             int totalArchivedApplicants = _registerDbContext.Accounts
                 .Where(a => a.Status.Status == "Disapproved" ||
@@ -53,26 +53,32 @@ namespace PWD_DSWD_SPC.Controllers.Admin
                              a.Status.Status == "Expired" ||
                              a.Status.Status == "Change of Residency")
                 .Count();
-
+        
             // Pass the count to the view using ViewBag
             ViewBag.TotalApprovedApplicants = totalApprovedApplicants;
             ViewBag.TotalPendingApplicants = totalPendingApplicants;
             ViewBag.TotalArchivedApplicants = totalArchivedApplicants;
-
- //ESTABLISHMENT ANALYTICS
- // Calculate Total Accredited Establishments (distinct QrCodeId count)
- int totalAccreditedEstablishments = _registerDbContext.QrCodes
-     .Select(q => q.QrCodeId)
-     .Distinct()
-     .Count();
-
- ViewBag.TotalAccreditedEstablishments = totalAccreditedEstablishments;
-
-
-            // Fetch total visits based on date of transaction for Medicine and Commodity
+        
+            
+        
+            // Fetch all distinct establishments from the QrCodes table
+            var allEstablishments = _registerDbContext.QrCodes
+                .GroupBy(q => q.EstablishmentName)
+                .Select(g => new
+                {
+                    EstablishmentName = g.Key,
+                    Branches = g.Select(b => new
+                    {
+                        BranchName = b.Branch,
+                    }).Distinct().ToList(),
+                    TotalBranches = g.Select(b => b.Branch).Distinct().Count()
+                })
+                .ToList();
+        
+            // Fetch transaction data as before
             var startDate = DateTime.UtcNow.AddDays(-30);
             var endDate = DateTime.UtcNow.Date;
-
+        
             // Fetch visits for Commodity Transactions
             var totalVisitsQuery = _registerDbContext.CommodityTransactions
                 .Where(c => c.CreatedDate.Date >= startDate && c.CreatedDate.Date <= endDate)
@@ -84,12 +90,13 @@ namespace PWD_DSWD_SPC.Controllers.Admin
                     TotalVisits = g.Count()
                 })
                 .ToList();
-
-            // Similarly, fetch visits for Medicine Transactions
+        
+            // Fetch visits for Medicine Transactions
             var totalMedicineVisits = _registerDbContext.MedicineTransactionLedgers
                 .Where(ledger => ledger.Transactions
                     .Any(medTransaction => medTransaction.DatePurchased.Date >= startDate && medTransaction.DatePurchased.Date <= endDate))
-                .GroupBy(ledger => new {
+                .GroupBy(ledger => new
+                {
                     EstablishmentName = ledger.Transactions.First().EstablishmentName,
                     BranchName = ledger.Transactions.First().Branch
                 })
@@ -100,8 +107,8 @@ namespace PWD_DSWD_SPC.Controllers.Admin
                     TotalVisits = g.Count()
                 })
                 .ToList();
-
-            // Combine the results from both Commodity and Medicine transactions
+        
+            // Combine transaction data
             var combinedVisits = totalVisitsQuery
                 .Union(totalMedicineVisits)
                 .GroupBy(v => new { v.EstablishmentName, v.BranchName })
@@ -112,28 +119,29 @@ namespace PWD_DSWD_SPC.Controllers.Admin
                     TotalVisits = g.Sum(v => v.TotalVisits)
                 })
                 .ToList();
-
-            // Group by EstablishmentName and count the distinct branches
-            var establishments = combinedVisits
-                .GroupBy(v => v.EstablishmentName)
-                .Select(g => new
+        
+            // Merge all establishments with transaction data
+            var establishmentsWithTransactions = allEstablishments
+                .Select(establishment => new
                 {
-                    EstablishmentName = g.Key,
-                    Branches = g.Select(b => new
+                    establishment.EstablishmentName,
+                    Branches = establishment.Branches.Select(branch => new
                     {
-                        BranchName = b.BranchName,
-                        TotalVisits = b.TotalVisits
+                        BranchName = branch.BranchName,
+                        TotalVisits = combinedVisits
+                            .Where(cv => cv.EstablishmentName == establishment.EstablishmentName && cv.BranchName == branch.BranchName)
+                            .Sum(cv => cv.TotalVisits) // Sum up visits for each branch
                     }).ToList(),
-                    TotalBranches = g.Select(b => b.BranchName).Distinct().Count() // Count distinct branches
+                    TotalBranches = establishment.TotalBranches
                 })
                 .ToList();
-
+        
             // Pass the data to the view
-            ViewBag.TotalVisits = establishments;
-
-
-
-
+            ViewBag.TotalAccreditedEstablishments = allEstablishments.Count;
+            ViewBag.TotalVisits = establishmentsWithTransactions;
+        
+        
+        
             // PWD Per Barangay function - include only approved accounts
             var pwdCountsPerBarangay = _registerDbContext.Accounts
                 .Where(a => a.Status.IsApproved) // Only consider approved accounts
@@ -144,7 +152,7 @@ namespace PWD_DSWD_SPC.Controllers.Admin
                     Count = g.Count()
                 })
                 .ToList();
-
+        
             // List of all barangays
             var allBarangays = new List<string> {
              "I-A (Sambat)", "I-B (City+Riverside)", "I-C (Bagong Bayan)",
@@ -173,16 +181,16 @@ namespace PWD_DSWD_SPC.Controllers.Admin
              "Santiago II", "Santisimo Rosario", "Santo Angel (Ilog)",
              "Santo Cristo", "Santo Niño (Arsum)", "Soledad (Macopa)"
          };
-
+        
             // Create a dictionary to store counts
             var barangayCounts = allBarangays.ToDictionary(b => b, b => 0);
-
+        
             // Update counts from the database
             foreach (var item in pwdCountsPerBarangay)
             {
                 barangayCounts[item.Barangay] = item.Count;
             }
-
+        
             // Sort the barangays by count in descending order
             var sortedBarangays = barangayCounts
                 .OrderByDescending(b => b.Value)
@@ -192,10 +200,10 @@ namespace PWD_DSWD_SPC.Controllers.Admin
                     Count = b.Value
                 })
                 .ToList();
-
+        
             ViewBag.PwdCountsPerBarangay = sortedBarangays;
-
-
+        
+        
             // Fetch total reports and their details
             var reports = _registerDbContext.Reports
                 .Select(r => new
@@ -205,27 +213,27 @@ namespace PWD_DSWD_SPC.Controllers.Admin
                     Status = r.Acknowledged ? "Acknowledged" : "Pending"
                 })
                 .ToList();
-
+        
             ViewBag.TotalReports = reports.Count;
             ViewBag.Reports = reports;
-
-
+        
+        
             // Count users for each disability type
             var disabilityCounts = _registerDbContext.Accounts
-            .Where(a => a.TypeOfDisability != null) // Exclude null types
-            .GroupBy(a => a.TypeOfDisability)
-            .Select(g => new
-            {
-                DisabilityType = g.Key,
-                Count = g.Count()
-            })
-            .ToList();
-
+                .GroupBy(a => a.TypeOfDisability)
+                .Select(g => new
+                {
+                    DisabilityType = g.Key,
+                    Count = g.Count()
+                })
+                .ToList();
+        
             // Pass the disability data to the view
             ViewBag.DisabilityCounts = disabilityCounts;
-
+        
             return View();
         }
+
 
         [HttpGet]
         public IActionResult GetBranches(string establishmentName)
