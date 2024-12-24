@@ -3,10 +3,6 @@
     Layout = "~/Views/Admin/Admin_Layout.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-
-<body>
 <!--PWD Per Brgy css-->
 <style>
     .details {
@@ -354,6 +350,25 @@
                     </div>
                     <div class="modal-body">
                         <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                           @*  <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Branch</th>
+                                        <th>Count</th>
+                                        <th>Total Visits</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                   @*  @foreach (var branch in establishment.Branches)
+                                    {
+                                        <tr>
+                                            <td>@branch.BranchName</td>
+                                            <td>@branch.Count</td>
+                                            <td>@branch.TotalVisits</td>
+                                        </tr>
+                                    } 
+                                </tbody>
+                            </table> *@
 
                                     <table>
                                         <thead>
@@ -437,11 +452,6 @@
                             display: true,
                             text: 'Disability Type'
                         },
-                        ticks: {
-                            // Rotate the x-axis labels if they are long
-                            maxRotation: 45,
-                            minRotation: 45
-                        },
                         grid: {
                             offset: true
                         }
@@ -451,10 +461,10 @@
                             display: true,
                             text: 'User Count'
                         },
-                        beginAtZero: false,  // Do not start at zero
+                        beginAtZero: true,  // Do not start at zero
                         min: 1,              // Start y-axis at 1
-                        stepSize: 1,         // Increment by 1
-                        suggestedMax: Math.max(...data) + 1,  // To ensure it adjusts correctly
+                        stepSize: 0.5,         // Increment by 1
+                        suggestedMax: Math.max(...data) + 0.5,  // To ensure it adjusts correctly
                         ticks: {
                             // Force integer tick marks
                             callback: function (value) {
@@ -476,7 +486,7 @@
                 document.getElementById('branch-modal-title').textContent = establishmentName;
 
                 // Fetch and populate branch data using AJAX (example structure)
-                fetch(/Admin/GetBranches?establishmentName=${encodeURIComponent(establishmentName)})
+                fetch(`/Admin/GetBranches?establishmentName=${encodeURIComponent(establishmentName)}`)
                     .then(response => response.json())
                     .then(data => {
                         const tbody = document.getElementById('branch-modal-body');
@@ -497,7 +507,4 @@
         });
     });
 </script>
-
-</body>
-</html>
 
