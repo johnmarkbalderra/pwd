@@ -186,4 +186,33 @@
         });
     });
 
+        //Disable button if the status is "Acknowledged" 
+         $('#acknowledgeconfirm').on('show.bs.modal', function (event) {
+             var button = $(event.relatedTarget); // Button that triggered the modal
+             var problemDescription = button.data('problem'); // Extract the ProblemDescription from data-* attribute
+             var modal = $(this);
+             var reportId = button.data('report-id'); // Extract report ID from data-* attribute
+        
+             // Set the problem description text
+             modal.find('.modal-body #problemDescription').text(problemDescription);
+        
+             // Check if the report is already acknowledged
+             var isAcknowledged = button.closest('tr').find('td:nth-child(9) span').hasClass('bg-success');
+             var acknowledgeButton = modal.find('#acknowledgeButton');
+             var noButton = modal.find('.btn-outline-danger'); // Select the "No" button
+        
+             if (isAcknowledged) {
+                 // Disable both the "Yes" and "No" buttons if already acknowledged
+                 acknowledgeButton.prop('disabled', true);
+                 noButton.prop('disabled', true);
+             } else {
+                 // Enable both the "Yes" and "No" buttons if not acknowledged
+                 acknowledgeButton.prop('disabled', false);
+                 noButton.prop('disabled', false);
+             }
+        
+             // Attach the report ID to the "Yes" button
+             acknowledgeButton.data('report-id', reportId);
+         });
+
 </script>
