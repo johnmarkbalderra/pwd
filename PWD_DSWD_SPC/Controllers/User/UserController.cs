@@ -36,42 +36,47 @@ namespace PWD_DSWD_SPC.Controllers.User
         public IActionResult UserDash()
         {
             var userAccountId = GetUserAccountId(); // Get the logged-in user's AccountId
-
+        
             if (userAccountId == Guid.Empty)
             {
                 return RedirectToAction("Login", "Account");
             }
-
+        
             // Convert current UTC time to Philippine Standard Time (UTC +8)
             var philippineTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Asia/Manila");
             var philippineDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, philippineTimeZone);
-
+        
             // Check if today is Monday in Philippine time
             bool isMonday = philippineDateTime.DayOfWeek == DayOfWeek.Monday;
-
+        
             // Get the start of the current week (Monday at 00:00:00) in Philippine time
             DateTime startOfWeek = philippineDateTime.Date.AddDays(-(int)philippineDateTime.DayOfWeek + (int)DayOfWeek.Monday);
-
+        
             // Fetch the most recent commodity transaction for the user account
             var lastTransaction = _registerDbContext.CommodityTransactions
                 .Where(t => t.AccountId == userAccountId)
                 .OrderByDescending(t => t.CreatedDate)
                 .FirstOrDefault();
-
-            // Calculate the remaining balance based on the current week logic
-            var remainingBalance = (lastTransaction == null ||
-                                    (isMonday && DateTime.Compare(lastTransaction.CreatedDate, startOfWeek) < 0))
-                                    ? 2500 // Reset balance if no transaction or the transaction is from a previous week
-                                    : lastTransaction.RemainingDiscount;
-
+            // Default balance
+            decimal remainingBalance = 2500;
+        
+            if (lastTransaction != null)
+            {
+                // Check if the last transaction belongs to the current week
+                if (lastTransaction.CreatedDate >= startOfWeek)
+                {
+                    remainingBalance = lastTransaction.RemainingDiscount;
+                }
+            }
+        
             ViewBag.RemainingBalance = remainingBalance; // Pass the calculated balance to the view
-
+        
             // Fetch distinct accredited establishments
             var accreditedEstablishments = _registerDbContext.QrCodes
                 .GroupBy(q => new { q.EstablishmentName, q.Branch })
                 .Select(g => g.First()) // Get the first entry of each group
                 .ToList();
-
+        
             return View(accreditedEstablishments);
         }
 
@@ -277,7 +282,7 @@ namespace PWD_DSWD_SPC.Controllers.User
             {
                 return BadRequest(new { message = "No transactions were provided." });
             }
-
+        
             try
             {
                 foreach (var transaction in transactions)
@@ -285,16 +290,18 @@ namespace PWD_DSWD_SPC.Controllers.User
                     var account = await _registerDbContext.Accounts.FindAsync(transaction.AccountId);
                     if (account == null)
                     {
-                        return BadRequest(new { message = "Session Expired, please log-in again. Thankyou!" });
+                        return BadRequest(new { message = "Session Expired, please log in again. Thank you!" });
                     }
-
-                    transaction.Price = transaction.Price >= 0 ? transaction.Price : 0; // Default to 0 if invalid
-                    transaction.TotalPrice = transaction.TotalPrice >= 0 ? transaction.TotalPrice : 0; // Default to 0 if invalid
-                    transaction.DiscountedPrice = transaction.DiscountedPrice >= 0 ? transaction.DiscountedPrice : 0; // Default to 0 if invalid
-
+        
+                    // Validate input values
+                    transaction.Price = Math.Max(transaction.Price, 0);
+                    transaction.TotalPrice = Math.Max(transaction.TotalPrice, 0);
+                    transaction.DiscountedPrice = Math.Max(transaction.DiscountedPrice, 0);
+        
+                    // Fetch or create a ledger
                     var ledger = await _registerDbContext.MedicineTransactionLedgers
                         .FirstOrDefaultAsync(l => l.AccountId == transaction.AccountId);
-
+        
                     if (ledger == null)
                     {
                         ledger = new MedicineTransactionLedger
@@ -305,27 +312,25 @@ namespace PWD_DSWD_SPC.Controllers.User
                         _registerDbContext.MedicineTransactionLedgers.Add(ledger);
                         await _registerDbContext.SaveChangesAsync();
                     }
-
+        
                     var remainingBalance = transaction.PrescribedQuantity - transaction.PurchasedQuantity;
                     if (remainingBalance < 0)
                     {
                         return BadRequest(new { message = "Purchased quantity cannot exceed prescribed quantity." });
                     }
-
+        
+                    // Check for existing transactions
                     var existingTransaction = await _registerDbContext.MedicineTransactions
-                     .FirstOrDefaultAsync(t => t.MedTransactionId == transaction.MedTransactionId ||
-                               (t.AccountId == transaction.AccountId &&
-                                t.MedicineName == transaction.MedicineName &&
-                                t.DatePurchased.Date == transaction.DatePurchased.Date));
-
-                    Console.WriteLine($"Transaction ID: {transaction.MedTransactionId}");
+                        .FirstOrDefaultAsync(t => t.MedTransactionId == transaction.MedTransactionId);
+        
                     if (existingTransaction != null)
                     {
+                        Console.WriteLine("Existing transaction found.");
+        
+                        // Update fields if changes are detected
                         if (existingTransaction.PurchasedQuantity != transaction.PurchasedQuantity ||
                             existingTransaction.RemainingBalance != remainingBalance)
                         {
-                            Console.WriteLine("Existing transaction found.");
-                            // Update fields only if there's a change
                             existingTransaction.PurchasedQuantity = transaction.PurchasedQuantity;
                             existingTransaction.RemainingBalance = remainingBalance;
                             existingTransaction.Price = transaction.Price;
@@ -334,7 +339,6 @@ namespace PWD_DSWD_SPC.Controllers.User
                             existingTransaction.EstablishmentName = string.IsNullOrEmpty(transaction.EstablishmentName) ? "Unknown" : transaction.EstablishmentName;
                             existingTransaction.Branch = string.IsNullOrEmpty(transaction.Branch) ? "Unknown" : transaction.Branch;
                             existingTransaction.DatePurchased = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Asia/Manila");
-                            existingTransaction.LedgerId = ledger.LedgerId;
                         }
                         else
                         {
@@ -347,17 +351,14 @@ namespace PWD_DSWD_SPC.Controllers.User
                         transaction.MedTransactionId = Guid.NewGuid();
                         transaction.RemainingBalance = remainingBalance;
                         transaction.LedgerId = ledger.LedgerId;
-
-                        // Ensure each new transaction has a slightly different timestamp
+        
                         transaction.DatePurchased = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Asia/Manila");
-                        await Task.Delay(10); // Introduce a slight delay to ensure different timestamps
-
                         transaction.EstablishmentName = string.IsNullOrEmpty(transaction.EstablishmentName) ? "Unknown" : transaction.EstablishmentName;
                         transaction.Branch = string.IsNullOrEmpty(transaction.Branch) ? "Unknown" : transaction.Branch;
                         _registerDbContext.MedicineTransactions.Add(transaction);
                     }
                 }
-
+        
                 await _registerDbContext.SaveChangesAsync();
                 return Ok(new { message = "Transactions submitted successfully!" });
             }
@@ -504,150 +505,122 @@ namespace PWD_DSWD_SPC.Controllers.User
             {
                 return Json(new { success = false, message = "Invalid AccountId." });
             }
-
-            // Convert current UTC time to Philippine Standard Time (UTC +8)
+        
             var philippineTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Asia/Manila");
             var philippineDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, philippineTimeZone);
-
+        
             // Check if today is Monday in Philippine time
             bool isMonday = philippineDateTime.DayOfWeek == DayOfWeek.Monday;
-
+        
             // Get the start of the current week (Monday at 00:00:00) in Philippine time
             DateTime startOfWeek = philippineDateTime.Date.AddDays(-(int)philippineDateTime.DayOfWeek + (int)DayOfWeek.Monday);
-
+        
             // Fetch the most recent commodity transaction for the account
             var lastTransaction = _registerDbContext.CommodityTransactions
                 .Where(t => t.AccountId == accountId)
-                .OrderByDescending(t => t.CreatedDate) // Get the latest transaction
+                .OrderByDescending(t => t.CreatedDate)
                 .FirstOrDefault();
-
-            // If no transactions exist, or it's Monday and the last transaction is from a prior week, reset to 2500
-            if (lastTransaction == null || (isMonday && lastTransaction.CreatedDate < startOfWeek))
+        
+            // Introduce a weekly balance variable
+            decimal weeklyBalance = 2500;
+        
+            if (lastTransaction != null)
             {
-                return Json(new { success = true, remainingBalance = 2500 });
+                // Check if the last transaction belongs to the current week
+                if (lastTransaction.CreatedDate >= startOfWeek)
+                {
+                    weeklyBalance = lastTransaction.RemainingDiscount;
+                }
+                else if (isMonday)
+                {
+                    // On Monday, reset the balance
+                    weeklyBalance = 2500;
+                }
             }
-
-            // Otherwise, return the remaining balance from the last transaction
-            return Json(new { success = true, remainingBalance = lastTransaction.RemainingDiscount });
+        
+            return Json(new { success = true, remainingBalance = weeklyBalance });
         }
 
 
 
-        [Route("User/SubmitCommodities")]
         [HttpPost]
+        [Route("User/SubmitCommodities")]
         public IActionResult SubmitCommodities([FromBody] CommodityTransaction transaction)
         {
             if (transaction == null || transaction.Items == null || !transaction.Items.Any())
             {
                 return BadRequest("Invalid transaction data.");
             }
-
-            // Retrieve AccountId based on the logged-in user
+        
             transaction.AccountId = GetUserAccountId();
-
+        
             if (transaction.AccountId == Guid.Empty)
             {
                 return BadRequest("Session Timeout. Please log in again.");
             }
-
-            // Validate AccountId
+        
             var account = _registerDbContext.Accounts.FirstOrDefault(a => a.Id == transaction.AccountId);
             if (account == null)
             {
                 return BadRequest("Invalid AccountId.");
             }
-
-            // Fetch the most recent commodity transaction for this account, if it exists
+        
+            var philippineTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Asia/Manila");
+            var philippineTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, philippineTimeZone);
+        
+            bool isMonday = philippineTime.DayOfWeek == DayOfWeek.Monday;
+            DateTime startOfWeek = philippineTime.Date.AddDays(-(int)philippineTime.DayOfWeek + (int)DayOfWeek.Monday);
+        
+            // Initialize the weekly balance
+            decimal weeklyBalance = 2500;
+        
             var lastTransaction = _registerDbContext.CommodityTransactions
                 .Where(t => t.AccountId == transaction.AccountId)
                 .OrderByDescending(t => t.CreatedDate)
                 .FirstOrDefault();
-
-            // Convert UTC time to Philippine Standard Time (UTC +8)
-            var philippineTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Asia/Manila");
-            var philippineTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, philippineTimeZone);
-
-            // Determine the remaining discount
+        
             if (lastTransaction != null)
             {
-                // Check if the last transaction is from a previous week
-                var lastTransactionWeekStart = lastTransaction.CreatedDate.Date.AddDays(-(int)lastTransaction.CreatedDate.DayOfWeek);
-                var currentWeekStart = philippineTime.Date.AddDays(-(int)philippineTime.DayOfWeek);
-
-                if (currentWeekStart > lastTransactionWeekStart)
+                if (lastTransaction.CreatedDate >= startOfWeek)
                 {
-                    // New week: Reset the remaining discount to 2500
-                    transaction.RemainingDiscount = 2500;
+                    weeklyBalance = lastTransaction.RemainingDiscount;
                 }
-                else
+                else if (isMonday)
                 {
-                    // Same week: Use the remaining discount from the last transaction
-                    transaction.RemainingDiscount = lastTransaction.RemainingDiscount;
+                    weeklyBalance = 2500;
                 }
             }
-            else
+        
+            // Calculate the total amount for the new transaction
+            var totalAmount = transaction.Items.Sum(i => i.Quantity * i.Price * 0.95m);
+            transaction.RemainingDiscount = weeklyBalance - totalAmount;
+        
+            if (transaction.RemainingDiscount < 0)
             {
-                // No previous transaction: Initialize the remaining discount to 2500
-                transaction.RemainingDiscount = 2500;
+                transaction.RemainingDiscount = 0;
             }
-
-            // Ensure transaction ID is unique for each new transaction.
-            if (transaction.TransactionId == Guid.Empty)
-            {
-                transaction.TransactionId = Guid.NewGuid();
-                transaction.CreatedDate = philippineTime;
-            }
-
-            // Set modified date to the current Philippine time
+        
+            transaction.TransactionId = Guid.NewGuid();
+            transaction.CreatedDate = philippineTime;
             transaction.ModifiedDate = philippineTime;
-
-            // Calculate and assign TotalPrice, DiscountedPrice, and AccountId for each item
+        
             foreach (var item in transaction.Items)
             {
-                item.AccountId = transaction.AccountId; // Assign AccountId to each CommodityItem
+                item.AccountId = transaction.AccountId;
                 item.TotalPrice = item.Quantity * item.Price;
-                item.DiscountedPrice = item.TotalPrice * 0.95m; // Apply 5% discount
-
-                // Set created and modified date for each item
-                if (item.CommodityItemId == Guid.Empty)
-                {
-                    item.CreatedDate = philippineTime;
-                }
+                item.DiscountedPrice = item.TotalPrice * 0.95m;
+                item.CreatedDate = philippineTime;
                 item.ModifiedDate = philippineTime;
             }
-
-            // Save establishment and branch info
-            if (string.IsNullOrWhiteSpace(transaction.EstablishmentName) || string.IsNullOrWhiteSpace(transaction.BranchName))
-            {
-                return BadRequest("Establishment name or branch name is missing.");
-            }
-
+        
             _registerDbContext.CommodityTransactions.Add(transaction);
             _registerDbContext.SaveChanges();
-
-            // After saving, calculate the remaining discount based on the items in the transaction
-            var totalAmount = transaction.Items.Sum(i => i.DiscountedPrice);
-            var updatedRemainingDiscount = transaction.RemainingDiscount - totalAmount;
-
-            if (updatedRemainingDiscount < 0)
-                updatedRemainingDiscount = 0; // Ensure the remaining discount doesn't go negative
-
-            // Update the remaining balance for the transaction record
-            var updatedTransaction = _registerDbContext.CommodityTransactions
-                .FirstOrDefault(t => t.TransactionId == transaction.TransactionId);
-
-            if (updatedTransaction != null)
-            {
-                updatedTransaction.RemainingDiscount = updatedRemainingDiscount;
-                _registerDbContext.SaveChanges();
-            }
-
-            // Return the updated remaining discount
+        
             return Ok(new
             {
                 success = true,
                 message = "Transaction completed!",
-                remainingDiscount = updatedRemainingDiscount
+                remainingDiscount = transaction.RemainingDiscount
             });
         }
 
