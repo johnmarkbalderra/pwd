@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using FluentEmail.Core;
 using FluentEmail.Razor;
@@ -46,19 +46,25 @@ namespace PWD_DSWD_SPC.Controllers
                 return BadRequest("Account details cannot be null");
             }
 
+            var barangaysData = Brgy.GetAll();
+            addAccount.BarangayList = barangaysData
+                .Select(b => new SelectListItem { Text = b.Barangay, Value = b.Barangay })
+                .ToList();
+
             // Check if the disability number is already in use
             if (await IsDisabilityNumberInUseAsync(addAccount.DisabilityNumber))
             {
-                ModelState.AddModelError("DisabilityNumber", "This disability number is already in use.");
-                return View(addAccount); // Return the view with the model to display the error
+                TempData["ErrorMessage"] = "This disability number is already in use.";
+                return View(addAccount);
             }
 
             // Check if the email is already in use (either approved or disapproved)
             if (await IsEmailInUseAsync(addAccount.EmailAddress))
             {
-                ModelState.AddModelError("EmailAddress", "This email is already in use by an active or recently disapproved account.");
-                return View(addAccount); // Return the view with the model to display errors
+                TempData["ErrorMessage"] = "The email you provided is already used";
+                return View(addAccount);
             }
+
 
             // Generate Reference Number
             string referenceNumber = GenerateReferenceNumber();
@@ -155,7 +161,7 @@ namespace PWD_DSWD_SPC.Controllers
                 <p><strong>Submission Details:</strong></p>
                 <p>The above requirements must be submitted at the office of DSWD, Municipality of San Pablo City, from 8:00 AM to 5:00 PM.</p>
 
-                <p>Thank you for your application. Should you have any questions?, feel free to reach out to our office. We look forward to assisting you.</p>
+                <p>Thank you for your application. Should you have any questions, feel free to reach out to our office. We look forward to assisting you.</p>
 
                 <p>Best Regards,<br/>
                 DSWD San Pablo City</p>
